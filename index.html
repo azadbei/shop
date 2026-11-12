@@ -99,7 +99,8 @@
             <h3 class="text-xl font-playfair font-bold text-gray-900">SAVATCHA</h3>
             <button onclick="toggleCart()" class="text-gray-400 hover:text-pink-500 transition-colors p-2 text-2xl leading-none cursor-pointer">&times;</button>
         </div>
-        <div id="cart-items" class="flex-1 overflow-y-auto p-6 md:p-8 space-y-6 custom-scroll pb-32">
+        <!-- Savatcha mahsulotlari -->
+        <div id="cart-items" class="flex-1 overflow-y-auto p-6 md:p-8 space-y-4 custom-scroll pb-32">
             <div class="text-center text-gray-400 text-xs mt-10">Savatcha bo'sh.</div>
         </div>
         <div class="p-6 md:p-8 bg-gray-50 border-t border-gray-100 absolute bottom-0 w-full">
@@ -110,6 +111,24 @@
             <button onclick="openCheckout()" class="w-full bg-pink-500 text-white py-4 rounded-xl font-bold tracking-widest text-[10px] md:text-sm hover:bg-gray-900 transition-colors shadow-lg shadow-pink-500/30 cursor-pointer">
                 XARID QILISH
             </button>
+        </div>
+    </div>
+
+    <!-- OGOHLANTIRISH MODALI (CONFIRM MODAL) -->
+    <div id="confirmModal" class="fixed inset-0 bg-black/60 z-[80] hidden backdrop-blur-md flex items-center justify-center p-4 opacity-0 transition-opacity duration-300 font-mono-ui">
+        <div onclick="event.stopPropagation()" class="bg-white rounded-[2rem] max-w-sm w-full p-6 md:p-8 shadow-2xl text-center transform scale-95 transition-transform duration-300 relative">
+            <!-- Ogohlantirish belgisi (Ikonka) -->
+            <div class="w-16 h-16 bg-amber-100 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-playfair font-bold text-gray-900 mb-2">OGOHLANTIRISH</h3>
+            <p class="text-xs text-gray-500 mb-6 leading-relaxed">Rostdan ham ushbu mahsulotni savatdan o'chirib yubormoqchimisiz?</p>
+            <div class="flex space-x-3">
+                <button onclick="closeConfirmModal()" class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-bold text-xs hover:bg-gray-200 transition-colors cursor-pointer">YO'Q</button>
+                <button id="confirmYesBtn" class="flex-1 bg-red-500 text-white py-3 rounded-xl font-bold text-xs hover:bg-red-600 transition-colors shadow-md cursor-pointer">HA, O'CHIRISH</button>
+            </div>
         </div>
     </div>
 
@@ -229,6 +248,7 @@
         let currentCategoryIndex = 0; 
         let cart = [];
         let modalSelectedSize = 'M';
+        let itemIndexToRemove = null; // O'chirilishi kerak bo'lgan mahsulot indeksi
 
         let currentSlide = 0;
         let slideInterval;
@@ -297,8 +317,8 @@
         }
 
         function updateBadges() {
+            const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
             const likesCount = dressesCatalog.filter(p => p.isLiked).length;
-            const cartCount = cart.length;
             
             const lMobile = document.getElementById('likes-badge');
             const lDesktop = document.getElementById('likes-badge-desktop');
@@ -489,7 +509,14 @@
 
         function addModalToCart(index) {
             const prod = dressesCatalog[index];
-            cart.push({ ...prod, selectedSize: modalSelectedSize });
+            const existingItem = cart.find(item => item.id === prod.id && item.selectedSize === modalSelectedSize);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...prod, selectedSize: modalSelectedSize, quantity: 1 });
+            }
+            
             updateCartUI();
             updateBadges();
             closeQuickView();
@@ -498,7 +525,14 @@
 
         function buyNow(index) {
             const prod = dressesCatalog[index];
-            cart.push({ ...prod, selectedSize: modalSelectedSize });
+            const existingItem = cart.find(item => item.id === prod.id && item.selectedSize === modalSelectedSize);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...prod, selectedSize: modalSelectedSize, quantity: 1 });
+            }
+            
             updateCartUI();
             updateBadges();
             closeQuickView();
@@ -546,25 +580,86 @@
             }
             let total = 0; cartContainer.innerHTML = '';
             cart.forEach((item, index) => {
-                total += item.price; const priceF = item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                total += item.price * item.quantity; 
+                const priceF = (item.price * item.quantity).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                
                 cartContainer.innerHTML += `
-                    <div class="flex justify-between items-center pb-4 border-b border-gray-100">
-                        <div>
-                            <div class="text-[10px] text-gray-400 mb-1">ID: ${item.id} | O'lcham: ${item.selectedSize}</div>
-                            <div class="font-bold text-gray-900 text-xs md:text-sm">${item.title}</div>
-                            <div class="text-pink-500 font-bold mt-1 text-[10px] md:text-xs">${priceF} UZS</div>
+                    <div class="bg-gray-50/80 border border-gray-100 rounded-2xl p-3 flex flex-col relative shadow-sm">
+                        <button onclick="askToRemove(${index})" class="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-lg cursor-pointer w-6 h-6 flex items-center justify-center bg-white rounded-full shadow-xs">&times;</button>
+                        
+                        <div class="flex items-center space-x-3 mb-3">
+                            <div onclick="openLightbox('${item.image}', event)" class="w-16 h-20 rounded-xl overflow-hidden shadow-xs shrink-0 cursor-pointer relative group">
+                                <img src="${item.image}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
+                                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
+                                </div>
+                            </div>
+                            
+                            <div class="flex-1 pr-4">
+                                <div class="text-[9px] text-gray-400 mb-0.5">ID: ${item.id} | O'lcham: ${item.selectedSize}</div>
+                                <div class="font-bold text-gray-900 text-xs md:text-sm line-clamp-1 font-playfair">${item.title}</div>
+                                <div class="text-pink-500 font-bold mt-1 text-xs">${priceF} UZS</div>
+                            </div>
                         </div>
-                        <button onclick="removeFromCart(${index})" class="text-gray-300 hover:text-red-500 text-xl cursor-pointer">&times;</button>
+
+                        <div class="flex items-center justify-between pt-2 border-t border-gray-200/65">
+                            <span class="text-[10px] text-gray-500 font-bold tracking-wider">MIQDORI:</span>
+                            <div class="flex items-center space-x-3">
+                                <button onclick="changeQuantity(${index}, -1)" class="w-7 h-7 rounded-xl bg-white border border-gray-200 text-gray-800 font-bold flex items-center justify-center hover:bg-gray-100 transition-colors cursor-pointer shadow-xs">-</button>
+                                <span class="text-xs font-bold text-gray-900">${item.quantity}</span>
+                                <button onclick="changeQuantity(${index}, 1)" class="w-7 h-7 rounded-xl bg-white border border-gray-200 text-gray-800 font-bold flex items-center justify-center hover:bg-gray-100 transition-colors cursor-pointer shadow-xs">+</button>
+                            </div>
+                        </div>
                     </div>
                 `;
             });
             totalEl.textContent = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         }
 
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            updateCartUI();
-            updateBadges();
+        function changeQuantity(index, delta) {
+            if (cart[index].quantity === 1 && delta === -1) {
+                // 1 ta qolgan bo'lsa va minus bosilsa - chiroyli modal ogohlantirish chiqariladi
+                askToRemove(index);
+            } else {
+                cart[index].quantity += delta;
+                if (cart[index].quantity <= 0) {
+                    askToRemove(index);
+                } else {
+                    updateCartUI();
+                    updateBadges();
+                }
+            }
+        }
+
+        function askToRemove(index) {
+            itemIndexToRemove = index;
+            const modal = document.getElementById('confirmModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.querySelector('div').classList.remove('scale-95');
+            }, 10);
+
+            // Tasdiqlash tugmasiga bosilgandagi amalni sozlash
+            document.getElementById('confirmYesBtn').onclick = function() {
+                if (itemIndexToRemove !== null) {
+                    cart.splice(itemIndexToRemove, 1);
+                    updateCartUI();
+                    updateBadges();
+                    showToast("Mahsulot savatdan olib tashlandi");
+                }
+                closeConfirmModal();
+            };
+        }
+
+        function closeConfirmModal() {
+            const modal = document.getElementById('confirmModal');
+            modal.classList.add('opacity-0');
+            modal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                itemIndexToRemove = null;
+            }, 300);
         }
 
         function toggleCart() {
@@ -659,7 +754,7 @@
         function openCheckout() {
             if(cart.length === 0) { showToast("Savatchangiz bo'sh!"); return; }
             toggleCart();
-            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             document.getElementById('checkout-total').textContent = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
             setTimeout(() => toggleModal('checkoutModal', true), 350); 
         }
