@@ -1,344 +1,929 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uz">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LadyWear - Professional UI</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        body {
-            position: relative;
-            background-color: #fce7f3;
-            overflow-x: hidden; 
-        }
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('fon.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            filter: blur(4px);
-            transform: scale(1.05);
-            z-index: -10;
-        }
-        
-        .font-playfair { font-family: 'Playfair Display', serif; }
-        .font-mono-ui { font-family: 'Space Mono', monospace; }
-        
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #f472b6; }
-        
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
-        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #f472b6; }
-        
-        .nav-line { transition: all 0.3s ease; width: 0; }
-        .nav-item.active .nav-line { width: 100%; }
-        .nav-item.active span { color: #111827; font-weight: bold; }
+      body {
+        position: relative;
+        background-color: #fce7f3;
+        overflow-x: hidden;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("fon.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        filter: blur(4px);
+        transform: scale(1.05);
+        z-index: -10;
+      }
 
-        .fade-enter { opacity: 0; transform: translateY(15px); transition: all 0.4s ease; }
-        .fade-enter-active { opacity: 1; transform: translateY(0); }
-        
-        .slider-wrapper { display: flex; transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1); }
+      .font-playfair {
+        font-family: "Playfair Display", serif;
+      }
+      .font-mono-ui {
+        font-family: "Space Mono", monospace;
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #f472b6;
+      }
+
+      .custom-scroll::-webkit-scrollbar {
+        width: 4px;
+      }
+      .custom-scroll::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 10px;
+      }
+      .custom-scroll::-webkit-scrollbar-thumb:hover {
+        background: #f472b6;
+      }
+
+      .nav-line {
+        transition: all 0.3s ease;
+        width: 0;
+      }
+      .nav-item.active .nav-line {
+        width: 100%;
+      }
+      .nav-item.active span {
+        color: #111827;
+        font-weight: bold;
+      }
+
+      .fade-enter {
+        opacity: 0;
+        transform: translateY(15px);
+        transition: all 0.4s ease;
+      }
+      .fade-enter-active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .slider-wrapper {
+        display: flex;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      }
     </style>
-</head>
-<body class="w-full flex flex-col text-gray-800 min-h-screen">
-
+  </head>
+  <body class="w-full flex flex-col text-gray-800 min-h-screen">
     <!-- YUQORI QISM -->
-    <header class="w-full px-6 pt-5 pb-3 flex flex-col items-center relative z-20">
-        <h1 class="text-2xl md:text-3xl font-playfair font-bold tracking-widest text-pink-500 flex items-end justify-center">
-            LADYWEAR<span class="text-gray-900 text-3xl md:text-4xl leading-[0.5] mb-1">.</span>
-        </h1>
-        
-        <div class="mt-4 relative w-full max-w-xs group z-30">
-            <input type="text" onclick="openSearch(event)" placeholder="Kiyim yoki aksessuar qidiring..." readonly class="w-full bg-white/70 backdrop-blur-xl border border-white/60 group-hover:border-pink-300 focus:border-pink-500 outline-none py-2.5 pl-4 pr-10 rounded-2xl text-[10px] md:text-xs font-mono-ui text-gray-800 transition-all shadow-sm cursor-pointer placeholder-gray-500 text-center">
-            <button onclick="openSearch(event)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-pink-500 transition-colors p-1 cursor-pointer">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            </button>
-        </div>
+    <header
+      class="w-full px-6 pt-5 pb-3 flex flex-col items-center relative z-20"
+    >
+      <h1
+        class="text-2xl md:text-3xl font-playfair font-bold tracking-widest text-pink-500 flex items-end justify-center"
+      >
+        LADYWEAR<span
+          class="text-gray-900 text-3xl md:text-4xl leading-[0.5] mb-1"
+          >.</span
+        >
+      </h1>
+
+      <div class="mt-4 relative w-full max-w-xs group z-30">
+        <input
+          type="text"
+          onclick="openSearch(event)"
+          placeholder="Kiyim yoki aksessuar qidiring..."
+          readonly
+          class="w-full bg-white/70 backdrop-blur-xl border border-white/60 group-hover:border-pink-300 focus:border-pink-500 outline-none py-2.5 pl-4 pr-10 rounded-2xl text-[10px] md:text-xs font-mono-ui text-gray-800 transition-all shadow-sm cursor-pointer placeholder-gray-500 text-center"
+        />
+        <button
+          onclick="openSearch(event)"
+          class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-pink-500 transition-colors p-1 cursor-pointer"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            ></path>
+          </svg>
+        </button>
+      </div>
     </header>
 
     <!-- ASOSIY QISM -->
-    <main class="flex-1 flex flex-col px-4 md:px-10 lg:px-20 pb-28 md:pb-12 relative z-10">
-        
-        <!-- MOBIL FOOTER MENYU -->
-        <div id="category-menu" class="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-3xl border-t border-white/60 rounded-t-[2rem] px-2 py-3 pb-5 flex justify-around items-center shadow-[0_-10px_40px_rgba(0,0,0,0.08)] z-[45] md:w-80 md:left-6 md:top-28 md:bottom-auto md:bg-white/70 md:backdrop-blur-xl md:border md:rounded-3xl md:p-6 md:flex-col md:items-start md:space-y-6 font-mono-ui transition-all duration-300">
-        </div>
+    <main
+      class="flex-1 flex flex-col px-4 md:px-10 lg:px-20 pb-28 md:pb-12 relative z-10"
+    >
+      <!-- MOBIL FOOTER MENYU -->
+      <div
+        id="category-menu"
+        class="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-3xl border-t border-white/60 rounded-t-[2rem] px-2 py-3 pb-5 flex justify-around items-center shadow-[0_-10px_40px_rgba(0,0,0,0.08)] z-[45] md:w-80 md:left-6 md:top-28 md:bottom-auto md:bg-white/70 md:backdrop-blur-xl md:border md:rounded-3xl md:p-6 md:flex-col md:items-start md:space-y-6 font-mono-ui transition-all duration-300"
+      ></div>
 
-        <!-- KATALOG QISMI -->
-        <div class="w-full md:pl-96 flex-1">
-            <div id="catalog-view" class="w-full grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 pb-12 pt-2 px-1 content-start">
-            </div>
-        </div>
-
+      <!-- KATALOG QISMI -->
+      <div class="w-full md:pl-96 flex-1">
+        <div
+          id="catalog-view"
+          class="w-full grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 pb-12 pt-2 px-1 content-start"
+        ></div>
+      </div>
     </main>
 
     <!-- LIGHTBOX -->
-    <div id="lightbox" onclick="closeLightbox()" class="fixed inset-0 bg-black/90 z-[60] hidden flex items-center justify-center opacity-0 transition-opacity duration-300 backdrop-blur-md">
-        <button onclick="closeLightbox()" class="absolute top-6 right-6 text-gray-400 hover:text-white text-4xl leading-none cursor-pointer">&times;</button>
-        <img id="lightbox-img" src="" alt="Zoom" class="max-w-[90vw] max-h-[85vh] object-contain rounded-xl transform scale-95 transition-transform duration-300 shadow-2xl" onclick="event.stopPropagation()">
+    <div
+      id="lightbox"
+      onclick="closeLightbox()"
+      class="fixed inset-0 bg-black/90 z-[60] hidden flex items-center justify-center opacity-0 transition-opacity duration-300 backdrop-blur-md"
+    >
+      <button
+        onclick="closeLightbox()"
+        class="absolute top-6 right-6 text-gray-400 hover:text-white text-4xl leading-none cursor-pointer"
+      >
+        &times;
+      </button>
+      <img
+        id="lightbox-img"
+        src=""
+        alt="Zoom"
+        class="max-w-[90vw] max-h-[85vh] object-contain rounded-xl transform scale-95 transition-transform duration-300 shadow-2xl"
+        onclick="event.stopPropagation()"
+      />
     </div>
 
     <!-- TOAST -->
-    <div id="toast" class="fixed top-12 right-[-100%] bg-gray-900 text-white px-6 py-4 rounded-xl font-mono-ui text-[10px] md:text-xs tracking-widest shadow-2xl flex items-center space-x-3 transition-all duration-500 z-[70]">
-        <svg class="w-5 h-5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-        <span id="toast-message">Qo'shildi!</span>
+    <div
+      id="toast"
+      class="fixed top-12 right-[-100%] bg-gray-900 text-white px-6 py-4 rounded-xl font-mono-ui text-[10px] md:text-xs tracking-widest shadow-2xl flex items-center space-x-3 transition-all duration-500 z-[70]"
+    >
+      <svg
+        class="w-5 h-5 text-pink-500"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 13l4 4L19 7"
+        ></path>
+      </svg>
+      <span id="toast-message">Qo'shildi!</span>
     </div>
 
     <!-- CART SIDEBAR -->
-    <div id="cart-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 hidden transition-opacity duration-300 opacity-0" onclick="toggleCart()"></div>
-    <div id="cart-sidebar" class="fixed top-0 right-[-100%] w-full max-w-sm h-full bg-white shadow-2xl z-[55] transition-all duration-500 flex flex-col font-mono-ui">
-        <div class="p-6 md:p-8 border-b border-gray-100 flex justify-between items-center bg-white z-10 relative">
-            <h3 class="text-xl font-playfair font-bold text-gray-900">SAVATCHA</h3>
-            <button onclick="toggleCart()" class="text-gray-400 hover:text-pink-500 transition-colors p-2 text-2xl leading-none cursor-pointer">&times;</button>
+    <div
+      id="cart-overlay"
+      class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 hidden transition-opacity duration-300 opacity-0"
+      onclick="toggleCart()"
+    ></div>
+    <div
+      id="cart-sidebar"
+      class="fixed top-0 right-[-100%] w-full max-w-sm h-full bg-white shadow-2xl z-[55] transition-all duration-500 flex flex-col font-mono-ui"
+    >
+      <div
+        class="p-6 md:p-8 border-b border-gray-100 flex justify-between items-center bg-white z-10 relative"
+      >
+        <h3 class="text-xl font-playfair font-bold text-gray-900">SAVATCHA</h3>
+        <button
+          onclick="toggleCart()"
+          class="text-gray-400 hover:text-pink-500 transition-colors p-2 text-2xl leading-none cursor-pointer"
+        >
+          &times;
+        </button>
+      </div>
+      <div
+        id="cart-items"
+        class="flex-1 overflow-y-auto p-6 md:p-8 space-y-4 custom-scroll pb-32"
+      >
+        <div class="text-center text-gray-400 text-xs mt-10">
+          Savatcha bo'sh.
         </div>
-        <!-- Savatcha mahsulotlari -->
-        <div id="cart-items" class="flex-1 overflow-y-auto p-6 md:p-8 space-y-4 custom-scroll pb-32">
-            <div class="text-center text-gray-400 text-xs mt-10">Savatcha bo'sh.</div>
+      </div>
+      <div
+        class="p-6 md:p-8 bg-gray-50 border-t border-gray-100 absolute bottom-0 w-full"
+      >
+        <div class="flex justify-between items-center mb-6">
+          <span class="text-[10px] md:text-xs text-gray-500 tracking-widest"
+            >SUMMA</span
+          >
+          <span class="text-lg md:text-xl font-bold text-gray-900"
+            ><span id="cart-total">0</span>
+            <span class="text-[10px] md:text-xs">UZS</span></span
+          >
         </div>
-        <div class="p-6 md:p-8 bg-gray-50 border-t border-gray-100 absolute bottom-0 w-full">
-            <div class="flex justify-between items-center mb-6">
-                <span class="text-[10px] md:text-xs text-gray-500 tracking-widest">SUMMA</span>
-                <span class="text-lg md:text-xl font-bold text-gray-900"><span id="cart-total">0</span> <span class="text-[10px] md:text-xs">UZS</span></span>
-            </div>
-            <button onclick="openCheckout()" class="w-full bg-pink-500 text-white py-4 rounded-xl font-bold tracking-widest text-[10px] md:text-sm hover:bg-gray-900 transition-colors shadow-lg shadow-pink-500/30 cursor-pointer">
-                XARID QILISH
-            </button>
-        </div>
+        <button
+          onclick="openCheckout()"
+          class="w-full bg-pink-500 text-white py-4 rounded-xl font-bold tracking-widest text-[10px] md:text-sm hover:bg-gray-900 transition-colors shadow-lg shadow-pink-500/30 cursor-pointer"
+        >
+          XARID QILISH
+        </button>
+      </div>
     </div>
 
-    <!-- OGOHLANTIRISH MODALI (CONFIRM MODAL) -->
-    <div id="confirmModal" class="fixed inset-0 bg-black/60 z-[80] hidden backdrop-blur-md flex items-center justify-center p-4 opacity-0 transition-opacity duration-300 font-mono-ui">
-        <div onclick="event.stopPropagation()" class="bg-white rounded-[2rem] max-w-sm w-full p-6 md:p-8 shadow-2xl text-center transform scale-95 transition-transform duration-300 relative">
-            <!-- Ogohlantirish belgisi (Ikonka) -->
-            <div class="w-16 h-16 bg-amber-100 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                </svg>
-            </div>
-            <h3 class="text-lg font-playfair font-bold text-gray-900 mb-2">OGOHLANTIRISH</h3>
-            <p class="text-xs text-gray-500 mb-6 leading-relaxed">Rostdan ham ushbu mahsulotni savatdan o'chirib yubormoqchimisiz?</p>
-            <div class="flex space-x-3">
-                <button onclick="closeConfirmModal()" class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-bold text-xs hover:bg-gray-200 transition-colors cursor-pointer">YO'Q</button>
-                <button id="confirmYesBtn" class="flex-1 bg-red-500 text-white py-3 rounded-xl font-bold text-xs hover:bg-red-600 transition-colors shadow-md cursor-pointer">HA, O'CHIRISH</button>
-            </div>
+    <!-- OGOHLANTIRISH MODALI -->
+    <div
+      id="confirmModal"
+      class="fixed inset-0 bg-black/60 z-[80] hidden backdrop-blur-md flex items-center justify-center p-4 opacity-0 transition-opacity duration-300 font-mono-ui"
+    >
+      <div
+        onclick="event.stopPropagation()"
+        class="bg-white rounded-[2rem] max-w-sm w-full p-6 md:p-8 shadow-2xl text-center transform scale-95 transition-transform duration-300 relative"
+      >
+        <div
+          class="w-16 h-16 bg-amber-100 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner"
+        >
+          <svg
+            class="w-8 h-8"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            ></path>
+          </svg>
         </div>
+        <h3 class="text-lg font-playfair font-bold text-gray-900 mb-2">
+          OGOHLANTIRISH
+        </h3>
+        <p class="text-xs text-gray-500 mb-6 leading-relaxed">
+          Rostdan ham ushbu mahsulotni savatdan o'chirib yubormoqchimisiz?
+        </p>
+        <div class="flex space-x-3">
+          <button
+            onclick="closeConfirmModal()"
+            class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-bold text-xs hover:bg-gray-200 transition-colors cursor-pointer"
+          >
+            YO'Q
+          </button>
+          <button
+            id="confirmYesBtn"
+            class="flex-1 bg-red-500 text-white py-3 rounded-xl font-bold text-xs hover:bg-red-600 transition-colors shadow-md cursor-pointer"
+          >
+            HA, O'CHIRISH
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- QUICK VIEW MODAL -->
-    <div id="quickViewModal" onclick="closeQuickView()" class="fixed inset-0 bg-black/60 z-[65] hidden backdrop-blur-md flex items-center justify-center p-4 opacity-0 transition-opacity duration-300 font-mono-ui">
-        <div onclick="event.stopPropagation()" class="bg-white rounded-[2rem] max-w-lg w-full p-6 md:p-8 shadow-2xl relative transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto custom-scroll">
-            <button onclick="closeQuickView()" class="sticky top-0 float-right z-30 text-gray-400 hover:text-pink-500 text-3xl leading-none bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-full shadow-sm cursor-pointer">&times;</button>
-            <div id="quickViewContent" class="clear-right pt-2"></div>
-        </div>
+    <div
+      id="quickViewModal"
+      onclick="closeQuickView()"
+      class="fixed inset-0 bg-black/60 z-[65] hidden backdrop-blur-md flex items-center justify-center p-4 opacity-0 transition-opacity duration-300 font-mono-ui"
+    >
+      <div
+        onclick="event.stopPropagation()"
+        class="bg-white rounded-[2rem] max-w-lg w-full p-6 md:p-8 shadow-2xl relative transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto custom-scroll"
+      >
+        <button
+          onclick="closeQuickView()"
+          class="sticky top-0 float-right z-30 text-gray-400 hover:text-pink-500 text-3xl leading-none bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-full shadow-sm cursor-pointer"
+        >
+          &times;
+        </button>
+        <div id="quickViewContent" class="clear-right pt-2"></div>
+      </div>
     </div>
 
     <!-- CHECKOUT MODAL -->
-    <div id="checkoutModal" onclick="closeCheckout()" class="fixed inset-0 bg-black/50 z-[60] hidden backdrop-blur-sm flex items-center justify-center opacity-0 transition-opacity duration-300 font-mono-ui px-4">
-        <div onclick="event.stopPropagation()" class="bg-white p-6 md:p-8 rounded-3xl w-full max-w-md transform scale-95 transition-transform duration-300 shadow-2xl relative">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl md:text-2xl font-playfair font-bold text-gray-900 tracking-wide leading-tight">BUYURTMANI<br>RASMIYLASHTIRISH</h2>
-                <button onclick="closeCheckout()" class="text-gray-400 hover:text-pink-500 text-3xl leading-none cursor-pointer">&times;</button>
-            </div>
-            <form onsubmit="submitOrder(event)" class="space-y-5">
-                <div>
-                    <label class="text-[10px] text-gray-500 tracking-widest mb-1 block">TO'LIQ ISMINGIZ</label>
-                    <input type="text" id="order-name" required placeholder="Ism Familiya" class="w-full border-b-2 border-gray-300 focus:border-pink-500 outline-none py-2 text-sm bg-transparent text-gray-800 transition-colors">
-                </div>
-                <div>
-                    <label class="text-[10px] text-gray-500 tracking-widest mb-1 block">TELEFON RAQAM</label>
-                    <input type="tel" id="order-phone" required placeholder="+998 90 123 45 67" class="w-full border-b-2 border-gray-300 focus:border-pink-500 outline-none py-2 text-sm bg-transparent text-gray-800 transition-colors">
-                </div>
-                <div>
-                    <label class="text-[10px] text-gray-500 tracking-widest mb-1 block">MANZIL</label>
-                    <textarea id="order-address" required placeholder="Shahar, tuman, ko'cha..." rows="2" class="w-full border-b-2 border-gray-300 focus:border-pink-500 outline-none py-2 text-sm bg-transparent text-gray-800 transition-colors resize-none custom-scroll"></textarea>
-                </div>
-                <div class="pt-4 flex justify-between items-end border-t border-gray-100">
-                    <span class="text-[10px] text-gray-500 tracking-widest">JAMI TO'LOV</span>
-                    <span class="text-lg font-bold text-pink-500"><span id="checkout-total">0</span> UZS</span>
-                </div>
-                <button type="submit" class="w-full bg-gray-900 text-white mt-4 py-4 rounded-xl text-xs font-bold tracking-widest hover:bg-pink-500 transition-all duration-300 shadow-md transform active:scale-95 cursor-pointer">TASDIQLASH</button>
-            </form>
+    <div
+      id="checkoutModal"
+      onclick="closeCheckout()"
+      class="fixed inset-0 bg-black/50 z-[60] hidden backdrop-blur-sm flex items-center justify-center opacity-0 transition-opacity duration-300 font-mono-ui px-4"
+    >
+      <div
+        onclick="event.stopPropagation()"
+        class="bg-white p-6 md:p-8 rounded-3xl w-full max-w-lg transform scale-95 transition-transform duration-300 shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scroll"
+      >
+        <div class="flex justify-between items-center mb-6">
+          <h2
+            class="text-xl md:text-2xl font-playfair font-bold text-gray-900 tracking-wide leading-tight"
+          >
+            TO'LOV VA BUYURTMA
+          </h2>
+          <button
+            onclick="closeCheckout()"
+            class="text-gray-400 hover:text-pink-500 text-3xl leading-none cursor-pointer"
+          >
+            &times;
+          </button>
         </div>
+
+        <!-- Shaxsiy Karta Ma'lumoti Bloki -->
+        <div
+          class="bg-gradient-to-r from-pink-500 to-purple-600 text-white p-5 rounded-2xl mb-6 shadow-md relative overflow-hidden"
+        >
+          <div
+            class="absolute right-[-10px] bottom-[-20px] opacity-10 text-6xl font-bold"
+          >
+            UZ
+          </div>
+          <div class="text-[10px] tracking-widest opacity-80 mb-1">
+            QABUL QILUVCHI KARTA (UZCARD / HUMO)
+          </div>
+          <div
+            id="merchant-card"
+            class="text-lg md:text-xl font-bold tracking-wider font-mono mb-3"
+          >
+            8600 1234 5678 9010
+          </div>
+          <div class="flex justify-between items-center text-[10px] opacity-90">
+            <span>Egalik qiluvchi: <b>Ism Familiya</b></span>
+            <button
+              onclick="copyCardNumber()"
+              class="bg-white/20 hover:bg-white/30 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
+            >
+              Nusxa olish
+            </button>
+          </div>
+        </div>
+
+        <form onsubmit="submitOrder(event)" class="space-y-4">
+          <div>
+            <label class="text-[10px] text-gray-500 tracking-widest mb-1 block"
+              >TO'LIQ ISMINGIZ</label
+            >
+            <input
+              type="text"
+              id="order-name"
+              required
+              placeholder="Ism Familiya"
+              class="w-full border-b-2 border-gray-300 focus:border-pink-500 outline-none py-2 text-sm bg-transparent text-gray-800 transition-colors"
+            />
+          </div>
+          <div>
+            <label class="text-[10px] text-gray-500 tracking-widest mb-1 block"
+              >TELEFON RAQAM</label
+            >
+            <input
+              type="tel"
+              id="order-phone"
+              required
+              placeholder="+998 90 123 45 67"
+              class="w-full border-b-2 border-gray-300 focus:border-pink-500 outline-none py-2 text-sm bg-transparent text-gray-800 transition-colors"
+            />
+          </div>
+          <div>
+            <label class="text-[10px] text-gray-500 tracking-widest mb-1 block"
+              >MANZIL</label
+            >
+            <textarea
+              id="order-address"
+              required
+              placeholder="Shahar, tuman, ko'cha..."
+              rows="2"
+              class="w-full border-b-2 border-gray-300 focus:border-pink-500 outline-none py-2 text-sm bg-transparent text-gray-800 transition-colors resize-none custom-scroll"
+            ></textarea>
+          </div>
+
+          <div
+            class="bg-amber-50 border border-amber-200 p-3 rounded-xl text-[10px] text-amber-800 leading-relaxed"
+          >
+            💡 Yuqoridagi karta raqamiga to'lovni amalga oshirgach,
+            <b>"TO'LADIM VA TASDIQLASH"</b> tugmasini bosing.
+          </div>
+
+          <div
+            class="pt-2 flex justify-between items-end border-t border-gray-100"
+          >
+            <span class="text-[10px] text-gray-500 tracking-widest"
+              >JAMI TO'LOV</span
+            >
+            <span class="text-lg font-bold text-pink-500"
+              ><span id="checkout-total">0</span> UZS</span
+            >
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-gray-900 text-white mt-2 py-4 rounded-xl text-xs font-bold tracking-widest hover:bg-pink-500 transition-all duration-300 shadow-md transform active:scale-95 cursor-pointer"
+          >
+            TO'LADIM VA TASDIQLASH
+          </button>
+        </form>
+      </div>
     </div>
 
     <!-- SEARCH MODAL -->
-    <div id="searchModal" onclick="closeSearch()" class="fixed inset-0 bg-black/60 z-[60] hidden backdrop-blur-md flex flex-col items-center pt-16 md:pt-20 px-4 opacity-0 transition-opacity duration-300 font-mono-ui">
-        <div onclick="event.stopPropagation()" class="bg-white p-6 md:p-8 rounded-3xl w-full max-w-2xl transform scale-95 transition-transform duration-300 shadow-2xl relative flex flex-col max-h-[85vh]">
-            <button onclick="closeSearch()" class="absolute top-6 right-6 text-gray-400 hover:text-pink-500 text-3xl leading-none z-10 cursor-pointer">&times;</button>
-            <h2 class="text-xl md:text-2xl font-playfair font-bold text-gray-900 tracking-wide mb-6">QIDIRUV</h2>
-            <div class="relative w-full shrink-0">
-                <input type="text" id="searchInput" oninput="handleSearch(event)" placeholder="Kiyim turi, rangi yoki mato bo'yicha..." class="w-full border-b-2 border-gray-200 focus:border-pink-500 outline-none py-3 pl-2 pr-12 text-sm md:text-base bg-transparent text-gray-800 transition-colors placeholder-gray-400">
-                <svg class="w-6 h-6 absolute right-2 top-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            </div>
-            <div id="searchSuggestions" class="mt-6 shrink-0 transition-all duration-300 overflow-y-auto custom-scroll pr-1">
-                <h4 class="text-[9px] md:text-[10px] text-gray-400 font-bold tracking-widest mb-3">TAVSIYA ETILADIGANLAR</h4>
-                <div class="flex flex-wrap gap-2 md:gap-2.5">
-                    <button onclick="setSearchValue('Ko\'ylak')" class="px-3.5 py-2 bg-gray-50 text-gray-700 rounded-xl text-[10px] md:text-xs hover:bg-pink-50 hover:text-pink-500 hover:border-pink-200 border border-gray-200 transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer">👗 Ko'ylaklar</button>
-                    <button onclick="setSearchValue('Ipak')" class="px-3.5 py-2 bg-gray-50 text-gray-700 rounded-xl text-[10px] md:text-xs hover:bg-pink-50 hover:text-pink-500 hover:border-pink-200 border border-gray-200 transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer">✨ Ipak matoli</button>
-                    <button onclick="setSearchValue('Qora')" class="px-3.5 py-2 bg-gray-50 text-gray-700 rounded-xl text-[10px] md:text-xs hover:bg-pink-50 hover:text-pink-500 hover:border-pink-200 border border-gray-200 transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer">⚫ Qora rang</button>
-                    <button onclick="setSearchValue('Aksessuar')" class="px-3.5 py-2 bg-gray-50 text-gray-700 rounded-xl text-[10px] md:text-xs hover:bg-pink-50 hover:text-pink-500 hover:border-pink-200 border border-gray-200 transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer">👜 Aksessuarlar</button>
-                </div>
-            </div>
-            <div id="searchResults" class="mt-4 flex-1 overflow-y-auto custom-scroll hidden flex-col gap-2 pb-4"></div>
+    <div
+      id="searchModal"
+      onclick="closeSearch()"
+      class="fixed inset-0 bg-black/60 z-[60] hidden backdrop-blur-md flex flex-col items-center pt-16 md:pt-20 px-4 opacity-0 transition-opacity duration-300 font-mono-ui"
+    >
+      <div
+        onclick="event.stopPropagation()"
+        class="bg-white p-6 md:p-8 rounded-3xl w-full max-w-2xl transform scale-95 transition-transform duration-300 shadow-2xl relative flex flex-col max-h-[85vh]"
+      >
+        <button
+          onclick="closeSearch()"
+          class="absolute top-6 right-6 text-gray-400 hover:text-pink-500 text-3xl leading-none z-10 cursor-pointer"
+        >
+          &times;
+        </button>
+        <h2
+          class="text-xl md:text-2xl font-playfair font-bold text-gray-900 tracking-wide mb-6"
+        >
+          QIDIRUV
+        </h2>
+        <div class="relative w-full shrink-0">
+          <input
+            type="text"
+            id="searchInput"
+            oninput="handleSearch(event)"
+            placeholder="Kiyim turi, rangi yoki mato bo'yicha..."
+            class="w-full border-b-2 border-gray-200 focus:border-pink-500 outline-none py-3 pl-2 pr-12 text-sm md:text-base bg-transparent text-gray-800 transition-colors placeholder-gray-400"
+          />
+          <svg
+            class="w-6 h-6 absolute right-2 top-3 text-gray-300"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            ></path>
+          </svg>
         </div>
+        <div
+          id="searchSuggestions"
+          class="mt-6 shrink-0 transition-all duration-300 overflow-y-auto custom-scroll pr-1"
+        >
+          <h4
+            class="text-[9px] md:text-[10px] text-gray-400 font-bold tracking-widest mb-3"
+          >
+            TAVSIYA ETILADIGANLAR
+          </h4>
+          <div class="flex flex-wrap gap-2 md:gap-2.5">
+            <button
+              onclick="setSearchValue('Ko\'ylak')"
+              class="px-3.5 py-2 bg-gray-50 text-gray-700 rounded-xl text-[10px] md:text-xs hover:bg-pink-50 hover:text-pink-500 hover:border-pink-200 border border-gray-200 transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer"
+            >
+              👗 Ko'ylaklar
+            </button>
+            <button
+              onclick="setSearchValue('Ipak')"
+              class="px-3.5 py-2 bg-gray-50 text-gray-700 rounded-xl text-[10px] md:text-xs hover:bg-pink-50 hover:text-pink-500 hover:border-pink-200 border border-gray-200 transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer"
+            >
+              ✨ Ipak matoli
+            </button>
+            <button
+              onclick="setSearchValue('Qora')"
+              class="px-3.5 py-2 bg-gray-50 text-gray-700 rounded-xl text-[10px] md:text-xs hover:bg-pink-50 hover:text-pink-500 hover:border-pink-200 border border-gray-200 transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer"
+            >
+              ⚫ Qora rang
+            </button>
+            <button
+              onclick="setSearchValue('Aksessuar')"
+              class="px-3.5 py-2 bg-gray-50 text-gray-700 rounded-xl text-[10px] md:text-xs hover:bg-pink-50 hover:text-pink-500 hover:border-pink-200 border border-gray-200 transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer"
+            >
+              👜 Aksessuarlar
+            </button>
+          </div>
+        </div>
+        <div
+          id="searchResults"
+          class="mt-4 flex-1 overflow-y-auto custom-scroll hidden flex-col gap-2 pb-4"
+        ></div>
+      </div>
     </div>
 
     <!-- Profil Modali -->
-    <div id="profileModal" onclick="closeProfile()" class="fixed inset-0 bg-black/50 z-[60] hidden backdrop-blur-sm flex items-center justify-center opacity-0 transition-opacity duration-300 font-mono-ui px-4">
-        <div onclick="event.stopPropagation()" class="bg-white p-6 md:p-8 rounded-3xl w-full max-w-md transform scale-95 transition-transform duration-300 shadow-2xl relative">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl md:text-2xl font-playfair font-bold text-gray-900 tracking-wide">KABINET</h2>
-                <button onclick="closeProfile()" class="text-gray-400 hover:text-pink-500 text-3xl leading-none cursor-pointer">&times;</button>
-            </div>
-            <div class="space-y-5">
-                <div>
-                    <label class="text-[10px] text-gray-500 tracking-widest mb-1 block">TELEFON YOKI EMAIL</label>
-                    <input type="text" placeholder="Kiriting" class="w-full border-b-2 border-gray-300 focus:border-pink-500 outline-none py-2 text-sm bg-transparent text-gray-800">
-                </div>
-                <div>
-                    <label class="text-[10px] text-gray-500 tracking-widest mb-1 block">PAROL</label>
-                    <input type="password" placeholder="••••••••" class="w-full border-b-2 border-gray-300 focus:border-pink-500 outline-none py-2 text-sm bg-transparent text-gray-800">
-                </div>
-            </div>
-            <button onclick="closeProfile()" class="w-full bg-gray-900 text-white mt-8 py-4 rounded-xl text-xs font-bold tracking-widest hover:bg-pink-500 transition-colors cursor-pointer">KIRISH</button>
+    <div
+      id="profileModal"
+      onclick="closeProfile()"
+      class="fixed inset-0 bg-black/50 z-[60] hidden backdrop-blur-sm flex items-center justify-center opacity-0 transition-opacity duration-300 font-mono-ui px-4"
+    >
+      <div
+        onclick="event.stopPropagation()"
+        class="bg-white p-6 md:p-8 rounded-3xl w-full max-w-md transform scale-95 transition-transform duration-300 shadow-2xl relative"
+      >
+        <div class="flex justify-between items-center mb-6">
+          <h2
+            class="text-xl md:text-2xl font-playfair font-bold text-gray-900 tracking-wide"
+          >
+            KABINET
+          </h2>
+          <button
+            onclick="closeProfile()"
+            class="text-gray-400 hover:text-pink-500 text-3xl leading-none cursor-pointer"
+          >
+            &times;
+          </button>
         </div>
+        <div class="space-y-5">
+          <div>
+            <label class="text-[10px] text-gray-500 tracking-widest mb-1 block"
+              >TELEFON YOKI EMAIL</label
+            >
+            <input
+              type="text"
+              placeholder="Kiriting"
+              class="w-full border-b-2 border-gray-300 focus:border-pink-500 outline-none py-2 text-sm bg-transparent text-gray-800"
+            />
+          </div>
+          <div>
+            <label class="text-[10px] text-gray-500 tracking-widest mb-1 block"
+              >PAROL</label
+            >
+            <input
+              type="password"
+              placeholder="••••••••"
+              class="w-full border-b-2 border-gray-300 focus:border-pink-500 outline-none py-2 text-sm bg-transparent text-gray-800"
+            />
+          </div>
+        </div>
+        <button
+          onclick="closeProfile()"
+          class="w-full bg-gray-900 text-white mt-8 py-4 rounded-xl text-xs font-bold tracking-widest hover:bg-pink-500 transition-colors cursor-pointer"
+        >
+          KIRISH
+        </button>
+      </div>
     </div>
 
     <!-- JAVASCRIPT -->
     <script>
-        const dressesCatalog = [
-            { id: "LW-042", title: "NAFIS IPAK KO'YLAK", material: "100% IPAK", price: 450000, stock: 8, totalStock: 15, image: "fon.jpg", isLiked: false },
-            { id: "LW-043", title: "QORA BAXMAL KO'YLAK", material: "BAXMAL", price: 550000, stock: 3, totalStock: 10, image: "fon.jpg", isLiked: false },
-            { id: "LW-044", title: "YOZGI GULLI LIBOS", material: "PAXTA 100%", price: 320000, stock: 12, totalStock: 25, image: "fon.jpg", isLiked: false },
-            { id: "LW-045", title: "KLASSIK ISH KO'YLAGI", material: "VISKOZA, POLIESTER", price: 380000, stock: 5, totalStock: 8, image: "fon.jpg", isLiked: false },
-            { id: "LW-046", title: "KECHKI OQSHOM LIBOSI", material: "SHIFON", price: 890000, stock: 2, totalStock: 5, image: "fon.jpg", isLiked: false },
-            { id: "LW-047", title: "PREMIUM KARDIGAN", material: "YUN", price: 620000, stock: 6, totalStock: 12, image: "fon.jpg", isLiked: false },
-            { id: "LW-048", title: "EKSKLYUZIV KOKTEYL KO'YLAGI", material: "SATEN", price: 750000, stock: 4, totalStock: 10, image: "fon.jpg", isLiked: false },
-            { id: "LW-049", title: "MINIMALISTIK OQ KO'YLAK", material: "LINO", price: 390000, stock: 9, totalStock: 20, image: "fon.jpg", isLiked: false },
-            { id: "LW-050", title: "VALVET MIDI YUBKA VA BLUZA", material: "BAXMAL VA TRIKOTAJ", price: 510000, stock: 7, totalStock: 14, image: "fon.jpg", isLiked: false },
-            { id: "LW-051", title: "ROYAL QIZIL LIBOS", material: "SHIFON VA SETRIN", price: 920000, stock: 2, totalStock: 6, image: "fon.jpg", isLiked: false },
-            { id: "LW-052", title: "ZAMONAVIY TRENCH", material: "TRENCH MATO", price: 980000, stock: 5, totalStock: 10, image: "fon.jpg", isLiked: false },
-            { id: "LW-053", title: "NEO-KLASSIK KOSTYUM", material: "KASHMIR", price: 1150000, stock: 3, totalStock: 8, image: "fon.jpg", isLiked: false },
-            { id: "LW-054", title: "ROMANTIK VOLANLI LIBOS", material: "ORGANZA", price: 480000, stock: 10, totalStock: 18, image: "fon.jpg", isLiked: false },
-            { id: "LW-055", title: "BOHO USLUBIDAGI MAXI", material: "PAXTA", price: 340000, stock: 11, totalStock: 22, image: "fon.jpg", isLiked: false },
-            { id: "LW-056", title: "BUSINESS LADY KOMPLEKT", material: "KREP", price: 670000, stock: 6, totalStock: 12, image: "fon.jpg", isLiked: false },
-            { id: "LW-057", title: "METALLIK EFFEKTLI KO'YLAK", material: "LUX LOREKS", price: 830000, stock: 4, totalStock: 9, image: "fon.jpg", isLiked: false },
-            { id: "LW-058", title: "UYG'UNLIKDAGI PYAMA STYLE", material: "TABIIY SILK", price: 310000, stock: 15, totalStock: 30, image: "fon.jpg", isLiked: false },
-            { id: "LW-059", title: "YUNLI OVERSIZED SVITER", material: "ALPAKA YUNI", price: 420000, stock: 8, totalStock: 16, image: "fon.jpg", isLiked: false },
-            { id: "LW-060", title: "SATIN MIDI YUBKA", material: "SATEN", price: 280000, stock: 14, totalStock: 25, image: "fon.jpg", isLiked: false },
-            { id: "LW-061", title: "FESTIVAL MAXI LIBOSI", material: "VISKOZA", price: 490000, stock: 7, totalStock: 15, image: "fon.jpg", isLiked: false }
-        ];
+      const dressesCatalog = [
+        {
+          id: "LW-042",
+          title: "NAFIS IPAK KO'YLAK",
+          material: "100% IPAK",
+          price: 450000,
+          stock: 8,
+          totalStock: 15,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+        {
+          id: "LW-043",
+          title: "QORA BAXMAL KO'YLAK",
+          material: "BAXMAL",
+          price: 550000,
+          stock: 3,
+          totalStock: 10,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+        {
+          id: "LW-044",
+          title: "YOZGI GULLI LIBOS",
+          material: "PAXTA 100%",
+          price: 320000,
+          stock: 12,
+          totalStock: 25,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+        {
+          id: "LW-045",
+          title: "KLASSIK ISH KO'YLAGI",
+          material: "VISKOZA, POLIESTER",
+          price: 380000,
+          stock: 5,
+          totalStock: 8,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+        {
+          id: "LW-046",
+          title: "KECHKI OQSHOM LIBOSI",
+          material: "SHIFON",
+          price: 890000,
+          stock: 2,
+          totalStock: 5,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+        {
+          id: "LW-047",
+          title: "PREMIUM KARDIGAN",
+          material: "YUN",
+          price: 620000,
+          stock: 6,
+          totalStock: 12,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+        {
+          id: "LW-048",
+          title: "EKSKLYUZIV KOKTEYL KO'YLAGI",
+          material: "SATEN",
+          price: 750000,
+          stock: 4,
+          totalStock: 10,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+        {
+          id: "LW-049",
+          title: "MINIMALISTIK OQ KO'YLAK",
+          material: "LINO",
+          price: 390000,
+          stock: 9,
+          totalStock: 20,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+        {
+          id: "LW-050",
+          title: "VALVET MIDI YUBKA VA BLUZA",
+          material: "BAXMAL VA TRIKOTAJ",
+          price: 510000,
+          stock: 7,
+          totalStock: 14,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+        {
+          id: "LW-051",
+          title: "ROYAL QIZIL LIBOS",
+          material: "SHIFON VA SETRIN",
+          price: 920000,
+          stock: 2,
+          totalStock: 6,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+        {
+          id: "LW-052",
+          title: "ZAMONAVIY TRENCH",
+          material: "TRENCH MATO",
+          price: 980000,
+          stock: 5,
+          totalStock: 10,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+        {
+          id: "LW-053",
+          title: "NEO-KLASSIK KOSTYUM",
+          material: "KASHMIR",
+          price: 1150000,
+          stock: 3,
+          totalStock: 8,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+        {
+          id: "LW-054",
+          title: "ROMANTIK VOLANLI LIBOS",
+          material: "ORGANZA",
+          price: 480000,
+          stock: 10,
+          totalStock: 18,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+        {
+          id: "LW-055",
+          title: "BOHO USLUBIDAGI MAXI",
+          material: "PAXTA",
+          price: 340000,
+          stock: 11,
+          totalStock: 22,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+        {
+          id: "LW-056",
+          title: "BUSINESS LADY KOMPLEKT",
+          material: "KREP",
+          price: 670000,
+          stock: 6,
+          totalStock: 12,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+        {
+          id: "LW-057",
+          title: "METALLIK EFFEKTLI KO'YLAK",
+          material: "LUX LOREKS",
+          price: 830000,
+          stock: 4,
+          totalStock: 9,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+        {
+          id: "LW-058",
+          title: "UYG'UNLIKDAGI PYAMA STYLE",
+          material: "TABIIY SILK",
+          price: 310000,
+          stock: 15,
+          totalStock: 30,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+        {
+          id: "LW-059",
+          title: "YUNLI OVERSIZED SVITER",
+          material: "ALPAKA YUNI",
+          price: 420000,
+          stock: 8,
+          totalStock: 16,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+        {
+          id: "LW-060",
+          title: "SATIN MIDI YUBKA",
+          material: "SATEN",
+          price: 280000,
+          stock: 14,
+          totalStock: 25,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+        {
+          id: "LW-061",
+          title: "FESTIVAL MAXI LIBOSI",
+          material: "VISKOZA",
+          price: 490000,
+          stock: 7,
+          totalStock: 15,
+          image: "fon.jpg",
+          isLiked: false,
+        },
+      ];
 
-        const appNavMenu = [
-            { id: 'home', name: "ASOSIY", action: "changeCategory(0)", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6", badge: null },
-            { id: 'search', name: "QIDIRUV", action: "openSearch(event)", icon: "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z", badge: null },
-            { id: 'favs', name: "SEVIMLI", action: "changeCategory(1)", icon: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z", badge: "likes-badge" },
-            { id: 'cart', name: "SAVAT", action: "toggleCart()", icon: "M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z", badge: "cart-badge" },
-            { id: 'profile', name: "KABINET", action: "toggleModal('profileModal', true)", icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z", badge: null }
-        ];
+      const appNavMenu = [
+        {
+          id: "home",
+          name: "ASOSIY",
+          action: "changeCategory(0)",
+          icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6",
+          badge: null,
+        },
+        {
+          id: "search",
+          name: "QIDIRUV",
+          action: "openSearch(event)",
+          icon: "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z",
+          badge: null,
+        },
+        {
+          id: "favs",
+          name: "SEVIMLI",
+          action: "changeCategory(1)",
+          icon: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z",
+          badge: "likes-badge",
+        },
+        {
+          id: "cart",
+          name: "SAVAT",
+          action: "toggleCart()",
+          icon: "M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z",
+          badge: "cart-badge",
+        },
+        {
+          id: "profile",
+          name: "KABINET",
+          action: "toggleModal('profileModal', true)",
+          icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z",
+          badge: null,
+        },
+      ];
 
-        let currentCategoryIndex = 0; 
-        let cart = [];
-        let modalSelectedSize = 'M';
-        let itemIndexToRemove = null; // O'chirilishi kerak bo'lgan mahsulot indeksi
+      let currentCategoryIndex = 0;
+      let cart = [];
+      let modalSelectedSize = "M";
+      let itemIndexToRemove = null;
 
-        let currentSlide = 0;
-        let slideInterval;
-        
-        function autoSlide() {
-            const slider = document.getElementById('home-slider');
-            if(!slider) return;
-            const dots = document.querySelectorAll('.slider-dot');
-            currentSlide = (currentSlide + 1) % 2; 
-            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
-            dots.forEach((dot, idx) => {
-                dot.className = `slider-dot h-1.5 rounded-full transition-all duration-300 ${idx === currentSlide ? 'bg-white w-4' : 'bg-white/50 w-1.5'}`;
-            });
-        }
+      let currentSlide = 0;
+      let slideInterval;
 
-        function initSlider() {
-            clearInterval(slideInterval);
-            currentSlide = 0;
-            const slider = document.getElementById('home-slider');
-            if(slider) slider.style.transform = `translateX(0%)`;
-            const dots = document.querySelectorAll('.slider-dot');
-            dots.forEach((dot, idx) => {
-                dot.className = `slider-dot h-1.5 rounded-full transition-all duration-300 ${idx === 0 ? 'bg-white w-4' : 'bg-white/50 w-1.5'}`;
-            });
-            slideInterval = setInterval(autoSlide, 3000);
-        }
+      function autoSlide() {
+        const slider = document.getElementById("home-slider");
+        if (!slider) return;
+        const dots = document.querySelectorAll(".slider-dot");
+        currentSlide = (currentSlide + 1) % 2;
+        slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+        dots.forEach((dot, idx) => {
+          dot.className = `slider-dot h-1.5 rounded-full transition-all duration-300 ${idx === currentSlide ? "bg-white w-4" : "bg-white/50 w-1.5"}`;
+        });
+      }
 
-        function renderMenu() {
-            const menuContainer = document.getElementById('category-menu');
-            menuContainer.innerHTML = '';
-            
-            appNavMenu.forEach((navItem, index) => {
-                let isActive = false;
-                if(index === 0 && currentCategoryIndex === 0) isActive = true;
-                if(index === 2 && currentCategoryIndex === 1) isActive = true;
+      function initSlider() {
+        clearInterval(slideInterval);
+        currentSlide = 0;
+        const slider = document.getElementById("home-slider");
+        if (slider) slider.style.transform = `translateX(0%)`;
+        const dots = document.querySelectorAll(".slider-dot");
+        dots.forEach((dot, idx) => {
+          dot.className = `slider-dot h-1.5 rounded-full transition-all duration-300 ${idx === 0 ? "bg-white w-4" : "bg-white/50 w-1.5"}`;
+        });
+        slideInterval = setInterval(autoSlide, 3000);
+      }
 
-                let badgeHTML = '';
-                if(navItem.badge) {
-                    badgeHTML = `<span id="${navItem.badge}" class="absolute -top-1 -right-1 w-4 h-4 bg-pink-500 text-white text-[8px] font-bold rounded-full flex items-center justify-center shadow-sm opacity-0 transition-opacity">0</span>`;
-                }
+      function renderMenu() {
+        const menuContainer = document.getElementById("category-menu");
+        menuContainer.innerHTML = "";
 
-                menuContainer.innerHTML += `
+        appNavMenu.forEach((navItem, index) => {
+          let isActive = false;
+          if (index === 0 && currentCategoryIndex === 0) isActive = true;
+          if (index === 2 && currentCategoryIndex === 1) isActive = true;
+
+          let badgeHTML = "";
+          if (navItem.badge) {
+            badgeHTML = `<span id="${navItem.badge}" class="absolute -top-1 -right-1 w-4 h-4 bg-pink-500 text-white text-[8px] font-bold rounded-full flex items-center justify-center shadow-sm opacity-0 transition-opacity">0</span>`;
+          }
+
+          menuContainer.innerHTML += `
                     <button onclick="${navItem.action}" class="nav-item group flex flex-col md:flex-row items-center md:items-center text-center md:text-left transition-all duration-300 w-[20%] md:w-full relative cursor-pointer">
-                        <div class="md:hidden relative flex items-center justify-center w-11 h-11 rounded-2xl transition-all duration-300 ${isActive ? 'bg-pink-100 text-pink-500 shadow-inner -translate-y-2' : 'bg-transparent text-gray-400 hover:text-pink-400'}">
-                            <svg class="w-6 h-6 ${isActive && navItem.id === 'favs' ? 'fill-current' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="md:hidden relative flex items-center justify-center w-11 h-11 rounded-2xl transition-all duration-300 ${isActive ? "bg-pink-100 text-pink-500 shadow-inner -translate-y-2" : "bg-transparent text-gray-400 hover:text-pink-400"}">
+                            <svg class="w-6 h-6 ${isActive && navItem.id === "favs" ? "fill-current" : ""}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="${navItem.icon}"></path>
                             </svg>
                             ${badgeHTML}
                         </div>
-                        <span class="block md:hidden text-[9px] mt-1 font-bold tracking-wider transition-all duration-300 ${isActive ? 'text-pink-500 -translate-y-1' : 'text-gray-400'}">${navItem.name}</span>
+                        <span class="block md:hidden text-[9px] mt-1 font-bold tracking-wider transition-all duration-300 ${isActive ? "text-pink-500 -translate-y-1" : "text-gray-400"}">${navItem.name}</span>
 
                         <div class="hidden md:block w-3 lg:w-4 mr-2 lg:mr-4">
-                            ${isActive ? '<div class="w-1.5 h-1.5 bg-pink-500 rounded-full mx-auto shadow-[0_0_8px_rgba(236,72,153,0.8)]"></div>' : ''}
+                            ${isActive ? '<div class="w-1.5 h-1.5 bg-pink-500 rounded-full mx-auto shadow-[0_0_8px_rgba(236,72,153,0.8)]"></div>' : ""}
                         </div>
-                        <span class="hidden md:inline mr-2 lg:mr-4 text-[10px] lg:text-xs transition-colors duration-300 ${isActive ? 'text-pink-500' : 'text-gray-400 group-hover:text-gray-600'}">0${index + 1} //</span>
+                        <span class="hidden md:inline mr-2 lg:mr-4 text-[10px] lg:text-xs transition-colors duration-300 ${isActive ? "text-pink-500" : "text-gray-400 group-hover:text-gray-600"}">0${index + 1} //</span>
                         <div class="relative hidden md:flex items-center space-x-2 w-full">
-                            <span class="font-bold tracking-widest transition-all duration-300 ${isActive ? 'text-gray-900' : 'text-gray-400 group-hover:text-gray-600'}">${navItem.name}</span>
+                            <span class="font-bold tracking-widest transition-all duration-300 ${isActive ? "text-gray-900" : "text-gray-400 group-hover:text-gray-600"}">${navItem.name}</span>
                             <div class="relative w-full h-full flex-1">
-                                ${navItem.badge ? `<span id="${navItem.badge}-desktop" class="absolute -top-2 left-0 px-1.5 py-0.5 bg-pink-500 text-white text-[8px] font-bold rounded-md opacity-0 transition-opacity">0</span>` : ''}
+                                ${navItem.badge ? `<span id="${navItem.badge}-desktop" class="absolute -top-2 left-0 px-1.5 py-0.5 bg-pink-500 text-white text-[8px] font-bold rounded-md opacity-0 transition-opacity">0</span>` : ""}
                             </div>
                         </div>
                     </button>
                 `;
-            });
-            updateBadges();
+        });
+        updateBadges();
+      }
+
+      function updateBadges() {
+        const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const likesCount = dressesCatalog.filter((p) => p.isLiked).length;
+
+        const lMobile = document.getElementById("likes-badge");
+        const lDesktop = document.getElementById("likes-badge-desktop");
+        const cMobile = document.getElementById("cart-badge");
+        const cDesktop = document.getElementById("cart-badge-desktop");
+
+        if (lMobile) {
+          lMobile.textContent = likesCount;
+          lMobile.style.opacity = likesCount > 0 ? "1" : "0";
+        }
+        if (lDesktop) {
+          lDesktop.textContent = likesCount;
+          lDesktop.style.opacity = likesCount > 0 ? "1" : "0";
         }
 
-        function updateBadges() {
-            const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-            const likesCount = dressesCatalog.filter(p => p.isLiked).length;
-            
-            const lMobile = document.getElementById('likes-badge');
-            const lDesktop = document.getElementById('likes-badge-desktop');
-            const cMobile = document.getElementById('cart-badge');
-            const cDesktop = document.getElementById('cart-badge-desktop');
-            
-            if(lMobile) { lMobile.textContent = likesCount; lMobile.style.opacity = likesCount > 0 ? '1' : '0'; }
-            if(lDesktop) { lDesktop.textContent = likesCount; lDesktop.style.opacity = likesCount > 0 ? '1' : '0'; }
-            
-            if(cMobile) { cMobile.textContent = cartCount; cMobile.style.opacity = cartCount > 0 ? '1' : '0'; }
-            if(cDesktop) { cDesktop.textContent = cartCount; cDesktop.style.opacity = cartCount > 0 ? '1' : '0'; }
+        if (cMobile) {
+          cMobile.textContent = cartCount;
+          cMobile.style.opacity = cartCount > 0 ? "1" : "0";
         }
+        if (cDesktop) {
+          cDesktop.textContent = cartCount;
+          cDesktop.style.opacity = cartCount > 0 ? "1" : "0";
+        }
+      }
 
-        function renderCatalog() {
-            const catalogEl = document.getElementById('catalog-view');
-            catalogEl.innerHTML = '';
-            let html = '';
+      function renderCatalog() {
+        const catalogEl = document.getElementById("catalog-view");
+        catalogEl.innerHTML = "";
+        let html = "";
 
-            if (currentCategoryIndex === 0) {
-                html += `
+        if (currentCategoryIndex === 0) {
+          html += `
                 <div class="col-span-full w-full mb-6 flex flex-col mt-2">
                     <div class="relative w-full h-44 md:h-56 rounded-[1.5rem] mb-6 bg-gray-100 group">
                         <div class="absolute -top-1.5 -right-1.5 w-12 h-12 border-t-[3px] border-r-[3px] border-pink-500 rounded-tr-[1.5rem] z-20"></div>
@@ -372,27 +957,31 @@
                     </div>
                 </div>
                 `;
-            } else if (currentCategoryIndex === 1) {
-                html += `<div class="col-span-full w-full mb-4 px-1"><h3 class="text-[10px] md:text-[11px] font-mono-ui font-bold text-gray-500 tracking-widest">SEVIMLI LIBOSLAR</h3></div>`;
-            }
+        } else if (currentCategoryIndex === 1) {
+          html += `<div class="col-span-full w-full mb-4 px-1"><h3 class="text-[10px] md:text-[11px] font-mono-ui font-bold text-gray-500 tracking-widest">SEVIMLI LIBOSLAR</h3></div>`;
+        }
 
-            let itemsToRender = dressesCatalog;
-            if (currentCategoryIndex === 1) {
-                itemsToRender = dressesCatalog.filter(p => p.isLiked);
-                if(itemsToRender.length === 0) {
-                    catalogEl.innerHTML = html + `
+        let itemsToRender = dressesCatalog;
+        if (currentCategoryIndex === 1) {
+          itemsToRender = dressesCatalog.filter((p) => p.isLiked);
+          if (itemsToRender.length === 0) {
+            catalogEl.innerHTML =
+              html +
+              `
                         <div class="col-span-full flex flex-col items-center justify-center mt-10 text-gray-400 font-mono-ui text-xs">
                             <svg class="w-12 h-12 mb-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                             Sizda hozircha sevimli liboslar yo'q.
                         </div>`;
-                    return;
-                }
-            }
-            
-            itemsToRender.forEach((prod) => {
-                const originalIndex = dressesCatalog.findIndex(p => p.id === prod.id); 
-                
-                html += `
+            return;
+          }
+        }
+
+        itemsToRender.forEach((prod) => {
+          const originalIndex = dressesCatalog.findIndex(
+            (p) => p.id === prod.id,
+          );
+
+          html += `
                     <div onclick="openQuickView(${originalIndex}, event)" class="w-full relative bg-white/60 backdrop-blur-xl border-2 border-transparent hover:border-white hover:bg-white/80 hover:shadow-lg hover:-translate-y-1 rounded-3xl p-2 md:p-3 cursor-pointer transition-all duration-300 flex flex-col group">
 
                         <div class="w-full aspect-[3/4] bg-gray-100 rounded-2xl overflow-hidden relative shadow-inner mb-3">
@@ -400,7 +989,7 @@
                             
                             <!-- Sevimli (Like) tugmasi -->
                             <button onclick="toggleLike(${originalIndex}, event)" class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm p-1.5 md:p-2 rounded-full transition-all duration-300 hover:bg-white shadow-sm z-20 hover:scale-110 cursor-pointer">
-                                <svg class="w-4 h-4 md:w-4 md:h-4 ${prod.isLiked ? 'text-pink-500 fill-current' : 'text-gray-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                <svg class="w-4 h-4 md:w-4 md:h-4 ${prod.isLiked ? "text-pink-500 fill-current" : "text-gray-400"}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                             </button>
 
                             <!-- Lupa / Lightbox tugmasi -->
@@ -425,25 +1014,27 @@
                         </div>
                     </div>
                 `;
-            });
+        });
 
-            catalogEl.innerHTML = html;
-            if(currentCategoryIndex === 0) {
-                initSlider(); 
-            } else {
-                clearInterval(slideInterval);
-            }
+        catalogEl.innerHTML = html;
+        if (currentCategoryIndex === 0) {
+          initSlider();
+        } else {
+          clearInterval(slideInterval);
         }
+      }
 
-        function openQuickView(index, e) {
-            e.stopPropagation();
-            const prod = dressesCatalog[index];
-            modalSelectedSize = 'M';
-            
-            const modalContent = document.getElementById('quickViewContent');
-            const priceF = prod.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-            
-            modalContent.innerHTML = `
+      function openQuickView(index, e) {
+        e.stopPropagation();
+        const prod = dressesCatalog[index];
+        modalSelectedSize = "M";
+
+        const modalContent = document.getElementById("quickViewContent");
+        const priceF = prod.price
+          .toString()
+          .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
+        modalContent.innerHTML = `
                 <div class="flex flex-col md:flex-row gap-6">
                     <div class="w-full md:w-1/2 aspect-[3/4] rounded-2xl overflow-hidden shadow-inner bg-gray-100 relative">
                         <img src="${prod.image}" class="w-full h-full object-cover">
@@ -483,107 +1074,125 @@
                     </div>
                 </div>
             `;
-            
-            const modal = document.getElementById('quickViewModal');
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                modal.querySelector('div').classList.remove('scale-95');
-            }, 10);
+
+        const modal = document.getElementById("quickViewModal");
+        modal.classList.remove("hidden");
+        setTimeout(() => {
+          modal.classList.remove("opacity-0");
+          modal.querySelector("div").classList.remove("scale-95");
+        }, 10);
+      }
+
+      function closeQuickView() {
+        const modal = document.getElementById("quickViewModal");
+        modal.classList.add("opacity-0");
+        modal.querySelector("div").classList.add("scale-95");
+        setTimeout(() => modal.classList.add("hidden"), 300);
+      }
+
+      function setModalSize(size, btn) {
+        modalSelectedSize = size;
+        document.querySelectorAll(".modal-size-btn").forEach((b) => {
+          b.className =
+            "modal-size-btn w-10 h-10 rounded-xl border border-gray-300 flex items-center justify-center font-bold text-xs hover:border-gray-900 transition-colors cursor-pointer";
+        });
+        btn.className =
+          "modal-size-btn active bg-gray-900 text-white border border-gray-900 w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs transition-colors shadow-md cursor-pointer";
+      }
+
+      function addModalToCart(index) {
+        const prod = dressesCatalog[index];
+        const existingItem = cart.find(
+          (item) =>
+            item.id === prod.id && item.selectedSize === modalSelectedSize,
+        );
+
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          cart.push({ ...prod, selectedSize: modalSelectedSize, quantity: 1 });
         }
 
-        function closeQuickView() {
-            const modal = document.getElementById('quickViewModal');
-            modal.classList.add('opacity-0');
-            modal.querySelector('div').classList.add('scale-95');
-            setTimeout(() => modal.classList.add('hidden'), 300);
+        updateCartUI();
+        updateBadges();
+        closeQuickView();
+        showToast(`${prod.title} (${modalSelectedSize}) savatga qo'shildi!`);
+      }
+
+      function buyNow(index) {
+        const prod = dressesCatalog[index];
+        const existingItem = cart.find(
+          (item) =>
+            item.id === prod.id && item.selectedSize === modalSelectedSize,
+        );
+
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          cart.push({ ...prod, selectedSize: modalSelectedSize, quantity: 1 });
         }
 
-        function setModalSize(size, btn) {
-            modalSelectedSize = size;
-            document.querySelectorAll('.modal-size-btn').forEach(b => {
-                b.className = "modal-size-btn w-10 h-10 rounded-xl border border-gray-300 flex items-center justify-center font-bold text-xs hover:border-gray-900 transition-colors cursor-pointer";
-            });
-            btn.className = "modal-size-btn active bg-gray-900 text-white border border-gray-900 w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs transition-colors shadow-md cursor-pointer";
-        }
+        updateCartUI();
+        updateBadges();
+        closeQuickView();
+        openCheckout();
+      }
 
-        function addModalToCart(index) {
-            const prod = dressesCatalog[index];
-            const existingItem = cart.find(item => item.id === prod.id && item.selectedSize === modalSelectedSize);
-            
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({ ...prod, selectedSize: modalSelectedSize, quantity: 1 });
-            }
-            
-            updateCartUI();
-            updateBadges();
-            closeQuickView();
-            showToast(`${prod.title} (${modalSelectedSize}) savatga qo'shildi!`);
-        }
+      function toggleLike(index, e) {
+        e.stopPropagation();
+        dressesCatalog[index].isLiked = !dressesCatalog[index].isLiked;
+        updateBadges();
+        renderCatalog();
+        showToast(
+          dressesCatalog[index].isLiked
+            ? "Sevimli qilib belgilandi!"
+            : "Sevimli ro'yxatidan olib tashlandi!",
+        );
+      }
 
-        function buyNow(index) {
-            const prod = dressesCatalog[index];
-            const existingItem = cart.find(item => item.id === prod.id && item.selectedSize === modalSelectedSize);
-            
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({ ...prod, selectedSize: modalSelectedSize, quantity: 1 });
-            }
-            
-            updateCartUI();
-            updateBadges();
-            closeQuickView();
-            openCheckout();
-        }
+      function openLightbox(src, e) {
+        e.stopPropagation();
+        const modal = document.getElementById("lightbox");
+        const img = document.getElementById("lightbox-img");
+        img.src = src;
+        modal.classList.remove("hidden");
+        setTimeout(() => {
+          modal.classList.remove("opacity-0");
+          img.classList.remove("scale-95");
+        }, 10);
+      }
 
-        function toggleLike(index, e) {
-            e.stopPropagation(); 
-            dressesCatalog[index].isLiked = !dressesCatalog[index].isLiked;
-            updateBadges();
-            renderCatalog();
-            showToast(dressesCatalog[index].isLiked ? "Sevimli qilib belgilandi!" : "Sevimli ro'yxatidan olib tashlandi!");
-        }
+      function closeLightbox() {
+        const modal = document.getElementById("lightbox");
+        const img = document.getElementById("lightbox-img");
+        modal.classList.add("opacity-0");
+        img.classList.add("scale-95");
+        setTimeout(() => modal.classList.add("hidden"), 300);
+      }
 
-        function openLightbox(src, e) {
-            e.stopPropagation(); 
-            const modal = document.getElementById('lightbox');
-            const img = document.getElementById('lightbox-img');
-            img.src = src;
-            modal.classList.remove('hidden');
-            setTimeout(() => { modal.classList.remove('opacity-0'); img.classList.remove('scale-95'); }, 10);
-        }
+      function changeCategory(index) {
+        currentCategoryIndex = index;
+        renderMenu();
+        renderCatalog();
+      }
 
-        function closeLightbox() {
-            const modal = document.getElementById('lightbox');
-            const img = document.getElementById('lightbox-img');
-            modal.classList.add('opacity-0');
-            img.classList.add('scale-95');
-            setTimeout(() => modal.classList.add('hidden'), 300);
+      function updateCartUI() {
+        const cartContainer = document.getElementById("cart-items");
+        const totalEl = document.getElementById("cart-total");
+        if (cart.length === 0) {
+          cartContainer.innerHTML = `<div class="text-center text-gray-400 text-xs mt-10">Savatcha bo'sh.</div>`;
+          totalEl.textContent = "0";
+          return;
         }
+        let total = 0;
+        cartContainer.innerHTML = "";
+        cart.forEach((item, index) => {
+          total += item.price * item.quantity;
+          const priceF = (item.price * item.quantity)
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 
-        function changeCategory(index) { 
-            currentCategoryIndex = index; 
-            renderMenu(); 
-            renderCatalog();
-        }
-
-        function updateCartUI() {
-            const cartContainer = document.getElementById('cart-items');
-            const totalEl = document.getElementById('cart-total');
-            if (cart.length === 0) { 
-                cartContainer.innerHTML = `<div class="text-center text-gray-400 text-xs mt-10">Savatcha bo'sh.</div>`; 
-                totalEl.textContent = "0"; 
-                return; 
-            }
-            let total = 0; cartContainer.innerHTML = '';
-            cart.forEach((item, index) => {
-                total += item.price * item.quantity; 
-                const priceF = (item.price * item.quantity).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-                
-                cartContainer.innerHTML += `
+          cartContainer.innerHTML += `
                     <div class="bg-gray-50/80 border border-gray-100 rounded-2xl p-3 flex flex-col relative shadow-sm">
                         <button onclick="askToRemove(${index})" class="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-lg cursor-pointer w-6 h-6 flex items-center justify-center bg-white rounded-full shadow-xs">&times;</button>
                         
@@ -612,127 +1221,148 @@
                         </div>
                     </div>
                 `;
-            });
-            totalEl.textContent = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        });
+        totalEl.textContent = total
+          .toString()
+          .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+      }
+
+      function changeQuantity(index, delta) {
+        if (cart[index].quantity === 1 && delta === -1) {
+          askToRemove(index);
+        } else {
+          cart[index].quantity += delta;
+          if (cart[index].quantity <= 0) {
+            askToRemove(index);
+          } else {
+            updateCartUI();
+            updateBadges();
+          }
+        }
+      }
+
+      function askToRemove(index) {
+        itemIndexToRemove = index;
+        const modal = document.getElementById("confirmModal");
+        modal.classList.remove("hidden");
+        setTimeout(() => {
+          modal.classList.remove("opacity-0");
+          modal.querySelector("div").classList.remove("scale-95");
+        }, 10);
+
+        document.getElementById("confirmYesBtn").onclick = function () {
+          if (itemIndexToRemove !== null) {
+            cart.splice(itemIndexToRemove, 1);
+            updateCartUI();
+            updateBadges();
+            showToast("Mahsulot savatdan olib tashlandi");
+          }
+          closeConfirmModal();
+        };
+      }
+
+      function closeConfirmModal() {
+        const modal = document.getElementById("confirmModal");
+        modal.classList.add("opacity-0");
+        modal.querySelector("div").classList.add("scale-95");
+        setTimeout(() => {
+          modal.classList.add("hidden");
+          itemIndexToRemove = null;
+        }, 300);
+      }
+
+      function copyCardNumber() {
+        const cardText = document.getElementById("merchant-card").innerText;
+        navigator.clipboard.writeText(cardText).then(() => {
+          showToast("Karta raqami nusxalandi!");
+        });
+      }
+
+      function toggleCart() {
+        const sidebar = document.getElementById("cart-sidebar");
+        const overlay = document.getElementById("cart-overlay");
+        if (sidebar.style.right === "0px") {
+          sidebar.style.right = "-100%";
+          overlay.classList.add("opacity-0");
+          setTimeout(() => overlay.classList.add("hidden"), 300);
+        } else {
+          sidebar.style.right = "0px";
+          overlay.classList.remove("hidden");
+          setTimeout(() => overlay.classList.remove("opacity-0"), 10);
+        }
+      }
+
+      function showToast(msg) {
+        const toast = document.getElementById("toast");
+        document.getElementById("toast-message").textContent = msg;
+        toast.style.right = window.innerWidth < 768 ? "1rem" : "2rem";
+        setTimeout(() => (toast.style.right = "-100%"), 3000);
+      }
+
+      function openSearch(e) {
+        e.preventDefault();
+        const modal = document.getElementById("searchModal");
+        modal.classList.remove("hidden");
+        document.getElementById("searchInput").focus();
+        setTimeout(() => {
+          modal.classList.remove("opacity-0");
+          modal.querySelector("div").classList.remove("scale-95");
+        }, 10);
+      }
+
+      function closeSearch() {
+        const modal = document.getElementById("searchModal");
+        modal.classList.add("opacity-0");
+        modal.querySelector("div").classList.add("scale-95");
+        setTimeout(() => {
+          modal.classList.add("hidden");
+          document.getElementById("searchInput").value = "";
+          document
+            .getElementById("searchSuggestions")
+            .classList.remove("hidden");
+          document.getElementById("searchResults").classList.add("hidden");
+        }, 300);
+      }
+
+      function setSearchValue(val) {
+        const input = document.getElementById("searchInput");
+        input.value = val;
+        input.dispatchEvent(new Event("input"));
+      }
+
+      function handleSearch(e) {
+        const val = e.target.value.toLowerCase().trim();
+        const suggestionsBox = document.getElementById("searchSuggestions");
+        const resultsBox = document.getElementById("searchResults");
+
+        if (!val) {
+          suggestionsBox.classList.remove("hidden");
+          resultsBox.classList.add("hidden");
+          return;
         }
 
-        function changeQuantity(index, delta) {
-            if (cart[index].quantity === 1 && delta === -1) {
-                // 1 ta qolgan bo'lsa va minus bosilsa - chiroyli modal ogohlantirish chiqariladi
-                askToRemove(index);
-            } else {
-                cart[index].quantity += delta;
-                if (cart[index].quantity <= 0) {
-                    askToRemove(index);
-                } else {
-                    updateCartUI();
-                    updateBadges();
-                }
-            }
+        suggestionsBox.classList.add("hidden");
+        resultsBox.classList.remove("hidden");
+
+        const filtered = dressesCatalog.filter(
+          (p) =>
+            p.title.toLowerCase().includes(val) ||
+            p.material.toLowerCase().includes(val),
+        );
+
+        if (filtered.length === 0) {
+          resultsBox.innerHTML =
+            '<div class="text-center text-gray-400 text-[10px] md:text-xs py-6">Hech qanday natija topilmadi...</div>';
+          return;
         }
 
-        function askToRemove(index) {
-            itemIndexToRemove = index;
-            const modal = document.getElementById('confirmModal');
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                modal.querySelector('div').classList.remove('scale-95');
-            }, 10);
-
-            // Tasdiqlash tugmasiga bosilgandagi amalni sozlash
-            document.getElementById('confirmYesBtn').onclick = function() {
-                if (itemIndexToRemove !== null) {
-                    cart.splice(itemIndexToRemove, 1);
-                    updateCartUI();
-                    updateBadges();
-                    showToast("Mahsulot savatdan olib tashlandi");
-                }
-                closeConfirmModal();
-            };
-        }
-
-        function closeConfirmModal() {
-            const modal = document.getElementById('confirmModal');
-            modal.classList.add('opacity-0');
-            modal.querySelector('div').classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                itemIndexToRemove = null;
-            }, 300);
-        }
-
-        function toggleCart() {
-            const sidebar = document.getElementById('cart-sidebar');
-            const overlay = document.getElementById('cart-overlay');
-            if (sidebar.style.right === '0px') {
-                sidebar.style.right = '-100%'; overlay.classList.add('opacity-0'); setTimeout(() => overlay.classList.add('hidden'), 300);
-            } else {
-                sidebar.style.right = '0px'; overlay.classList.remove('hidden'); setTimeout(() => overlay.classList.remove('opacity-0'), 10);
-            }
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById('toast'); document.getElementById('toast-message').textContent = msg;
-            toast.style.right = window.innerWidth < 768 ? '1rem' : '2rem';
-            setTimeout(() => toast.style.right = '-100%', 3000);
-        }
-        
-        function openSearch(e) { 
-            e.preventDefault(); 
-            const modal = document.getElementById('searchModal');
-            modal.classList.remove('hidden');
-            document.getElementById('searchInput').focus(); 
-            setTimeout(() => { 
-                modal.classList.remove('opacity-0'); 
-                modal.querySelector('div').classList.remove('scale-95'); 
-            }, 10);
-        }
-        
-        function closeSearch() { 
-            const modal = document.getElementById('searchModal');
-            modal.classList.add('opacity-0'); 
-            modal.querySelector('div').classList.add('scale-95'); 
-            setTimeout(() => { 
-                modal.classList.add('hidden'); 
-                document.getElementById('searchInput').value = '';
-                document.getElementById('searchSuggestions').classList.remove('hidden');
-                document.getElementById('searchResults').classList.add('hidden');
-            }, 300); 
-        }
-
-        function setSearchValue(val) {
-            const input = document.getElementById('searchInput');
-            input.value = val;
-            input.dispatchEvent(new Event('input')); 
-        }
-
-        function handleSearch(e) {
-            const val = e.target.value.toLowerCase().trim();
-            const suggestionsBox = document.getElementById('searchSuggestions');
-            const resultsBox = document.getElementById('searchResults');
-            
-            if(!val) {
-                suggestionsBox.classList.remove('hidden');
-                resultsBox.classList.add('hidden');
-                return;
-            }
-            
-            suggestionsBox.classList.add('hidden');
-            resultsBox.classList.remove('hidden');
-            
-            const filtered = dressesCatalog.filter(p => p.title.toLowerCase().includes(val) || p.material.toLowerCase().includes(val));
-            
-            if(filtered.length === 0) {
-                resultsBox.innerHTML = '<div class="text-center text-gray-400 text-[10px] md:text-xs py-6">Hech qanday natija topilmadi...</div>';
-                return;
-            }
-            
-            resultsBox.innerHTML = '';
-            filtered.forEach(p => {
-                const originalIndex = dressesCatalog.findIndex(x => x.id === p.id);
-                const priceF = p.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-                resultsBox.innerHTML += `
+        resultsBox.innerHTML = "";
+        filtered.forEach((p) => {
+          const originalIndex = dressesCatalog.findIndex((x) => x.id === p.id);
+          const priceF = p.price
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+          resultsBox.innerHTML += `
                     <div onclick="closeSearch(); openQuickView(${originalIndex}, event);" class="flex items-center gap-4 p-2 md:p-3 hover:bg-pink-50/50 rounded-2xl cursor-pointer transition-all duration-300 border border-transparent hover:border-pink-200">
                         <img src="${p.image}" class="w-12 h-16 object-cover rounded-xl shadow-sm">
                         <div class="flex-1">
@@ -745,38 +1375,118 @@
                         </div>
                     </div>
                 `;
-            });
-        }
+        });
+      }
 
-        function openProfile(e) { e.preventDefault(); toggleModal('profileModal', true); }
-        function closeProfile() { toggleModal('profileModal', false); }
-        
-        function openCheckout() {
-            if(cart.length === 0) { showToast("Savatchangiz bo'sh!"); return; }
-            toggleCart();
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            document.getElementById('checkout-total').textContent = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-            setTimeout(() => toggleModal('checkoutModal', true), 350); 
+      function openProfile(e) {
+        e.preventDefault();
+        toggleModal("profileModal", true);
+      }
+      function closeProfile() {
+        toggleModal("profileModal", false);
+      }
+
+      function openCheckout() {
+        if (cart.length === 0) {
+          showToast("Savatchangiz bo'sh!");
+          return;
         }
-        function closeCheckout() { toggleModal('checkoutModal', false); }
-        
-        function submitOrder(e) {
-            e.preventDefault(); 
-            const name = document.getElementById('order-name').value;
+        toggleCart();
+        const total = cart.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0,
+        );
+        document.getElementById("checkout-total").textContent = total
+          .toString()
+          .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        setTimeout(() => toggleModal("checkoutModal", true), 350);
+      }
+      function closeCheckout() {
+        toggleModal("checkoutModal", false);
+      }
+
+      // --- TELEGRAM BOTGA MA'LUMOT YUBORISH ---
+      function submitOrder(e) {
+        e.preventDefault();
+
+        const name = document.getElementById("order-name").value;
+        const phone = document.getElementById("order-phone").value;
+        const address = document.getElementById("order-address").value;
+        const totalAmount =
+          document.getElementById("checkout-total").textContent;
+
+        // Karta raqamini avtomatik nusxalash
+        const cardText = document.getElementById("merchant-card").innerText;
+        navigator.clipboard
+          .writeText(cardText)
+          .catch((err) => console.log("Nusxalanmadi"));
+
+        let itemsText = "";
+        cart.forEach((item, idx) => {
+          itemsText +=
+            `%0A${idx + 1}. ${item.title} (ID: ${item.id})` +
+            `%0A   - O'lcham: ${item.selectedSize}` +
+            `%0A   - Miqdor: ${item.quantity} ta` +
+            `%0A   - Narx: ${(item.price * item.quantity).toLocaleString()} UZS%0A`;
+        });
+
+        // O'zingizning bot token va chat idingiz
+        const BOT_TOKEN = "8925391424:AAEbz7-sTH5g5zYOmJTFMTp3babkuikiZF4";
+        const CHAT_ID = "8353037526";
+
+        const message =
+          `🛍 <b>YANGI BUYURTMA!</b> 🛍%0A%0A` +
+          `👤 <b>Ism:</b> ${encodeURIComponent(name)}%0A` +
+          `📞 <b>Telefon:</b> ${encodeURIComponent(phone)}%0A` +
+          `📍 <b>Manzil:</b> ${encodeURIComponent(address)}%0A%0A` +
+          `📦 <b>Mahsulotlar:</b>${itemsText}%0A` +
+          `💰 <b>Jami summa:</b> ${totalAmount} UZS%0A%0A` +
+          `⚠️ <i>Mijozdan to'lov cheki kutilmoqda...</i>`;
+
+        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${message}&parse_mode=HTML`;
+
+        fetch(url)
+          .then((response) => response.json())
+          .then((data) => {
             closeCheckout();
+            showToast(`Karta raqami nusxalandi! Botga yo'naltirilmoqda...`);
+            e.target.reset();
+            cart = [];
+            updateCartUI();
+            updateBadges();
+
             setTimeout(() => {
-                showToast(`Rahmat, ${name}! Buyurtmangiz qabul qilindi.`);
-                e.target.reset(); cart = []; updateCartUI(); updateBadges();
-            }, 500);
-        }
+              window.location.href = "https://t.me/LadyWearShopBot";
+            }, 1500);
+          })
+          .catch((error) => {
+            closeCheckout();
+            showToast(`Buyurtma qabul qilindi! Botga o'tilmoqda...`);
+            setTimeout(() => {
+              window.location.href = "https://t.me/LadyWearShopBot";
+            }, 1500);
+          });
+      }
 
-        function toggleModal(id, show) {
-            const modal = document.getElementById(id);
-            if(show) { modal.classList.remove('hidden'); setTimeout(() => { modal.classList.remove('opacity-0'); modal.querySelector('div').classList.remove('scale-95'); }, 10); } 
-            else { modal.classList.add('opacity-0'); modal.querySelector('div').classList.add('scale-95'); setTimeout(() => modal.classList.add('hidden'), 300); }
+      function toggleModal(id, show) {
+        const modal = document.getElementById(id);
+        if (show) {
+          modal.classList.remove("hidden");
+          setTimeout(() => {
+            modal.classList.remove("opacity-0");
+            modal.querySelector("div").classList.remove("scale-95");
+          }, 10);
+        } else {
+          modal.classList.add("opacity-0");
+          modal.querySelector("div").classList.add("scale-95");
+          setTimeout(() => modal.classList.add("hidden"), 300);
         }
+      }
 
-        window.onload = () => { renderMenu(); renderCatalog(); };
+      window.onload = () => {
+        renderMenu();
+        renderCatalog();
+      };
     </script>
-</body>
+  </body>
 </html>
