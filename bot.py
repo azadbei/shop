@@ -4,66 +4,90 @@ from aiogram import Bot, Dispatcher, F, Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import (
+    Message, 
+    CallbackQuery, 
+    InlineKeyboardMarkup, 
+    InlineKeyboardButton, 
+    WebAppInfo
+)
 
-# Bot sozlamalari (O'zingizning TOKEN va Admin ID raqamingizni yozing)
+# Bot sozlamalari (Token va Admin ID)
 BOT_TOKEN = "8925391424:AAEbz7-sTH5g5zYOmJTFMTp3babkuikiZF4"
 ADMIN_ID = 8353037526  # Sizning Telegram ID'ingiz
+
+# Saytingizning GitHub Pages havolasi
+WEB_APP_URL = "https://azadbei.github.io/shop/"
 
 logging.basicConfig(level=logging.INFO)
 router = Router()
 
-# Holatlar (FSM)
+# Holatlar (FSM - Chekni kutish holati)
 class PaymentState(StatesGroup):
     waiting_for_receipt = State()
 
-# /start buyrug'i
+# /start buyrug'i (Mini App tugmasi bilan)
 @router.message(Command("start"))
 async def cmd_start(message: Message, state: FSMContext):
     await state.set_state(PaymentState.waiting_for_receipt)
+    
+    # Mini App tugmasi
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(
+                text="🛍 LADYWEAR DO'KONINI OCHISH", 
+                web_app=WebAppInfo(url=WEB_APP_URL)
+            )
+        ]
+    ])
+    
     await message.answer(
-        "👋 Assalomu alaykum! <b>LadyWear</b> do'konimizga xush kelibsiz.\n\n"
-        "💳 Iltimos, xarid uchun amalga oshirgan <b>to'lov chekingizni (rasm ko'rinishida)</b> ushbu botga yuboring:",
-        parse_mode="HTML"
+        "👋 Assalomu alaykum! <b>LadyWear</b> onlayn do'konimizga xush kelibsiz.\n\n"
+        "👇 Pastdagi tugmani bosing va bot ichining o'zida kiyimlarni tanlab, savatchaga soling. "
+        "Buyurtma berib, to'lovni amalga oshirgach, <b>to'lov chekini (rasm ko'rinishida)</b> shu yerga yuboring:",
+        parse_mode="HTML",
+        reply_markup=keyboard
     )
 
-# Mijoz rasm yuborganda
+# Mijoz to'lov chekini rasm ko'rinishida yuborganda
 @router.message(PaymentState.waiting_for_receipt, F.photo)
 async def process_receipt(message: Message, state: FSMContext):
     photo_file_id = message.photo[-1].file_id
     user = message.from_user
     
+    username_text = f"@{user.username}" if user.username else "Nomaʼlum"
+    
     user_info = (
         f"📩 <b>YANGI TO'LOV CHEKI KELDI!</b>\n\n"
-        f"👤 <b>Mijoz:</b> {user.full_name} (@{user.username, 'Nomaʼlum'})"
+        f"👤 <b>Mijoz:</b> {user.full_name} ({username_text})\n"
         f"🆔 <b>ID:</b> <code>{user.id}</code>\n\n"
-        f"Holat: Admin tasdiqi kutilmoqda..."
+        f"⚠️ Holat: Admin tasdiqi kutilmoqda..."
     )
 
-    # Admin uchun tasdiqlash tugmalari
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+    # Admin uchun tasdiqlash va rad etish tugmalari
+    admin_keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [
             InlineKeyboardButton(text="✅ Tasdiqlash", callback_data=f"approve_{user.id}"),
-            InlineKeyboardButton(text="❌ Bekor qilish", callback_data=f"reject_{user.id}")
+            InlineKeyboardButton(text="❌ Rad etish", callback_data=f"reject_{user.id}")
         ]
     ])
 
-    # Rasmni adminga yuborish
+    # Rasmni adminga yo'naltirish
     await message.bot.send_photo(
         chat_id=ADMIN_ID,
         photo=photo_file_id,
         caption=user_info,
         parse_mode="HTML",
-        reply_markup=keyboard
+        reply_markup=admin_keyboard
     )
 
-    await message.answer("✅ Chekingiz qabul qilindi! Admin tekshirib chiqqach, tez orada sizga xabar beramiz.")
+    await message.answer("✅ To'lov chekingiz adminga yuborildi! Tez orada tekshirib tasdiqlashadi.")
     await state.clear()
 
-# Rasm bo'lmagan narsa yuborilganda
+# Rasm bo'lmagan narsa yuborilganda ogohlantirish
 @router.message(PaymentState.waiting_for_receipt)
 async def not_photo(message: Message):
-    await message.answer("⚠️ Iltimos, matn emas, <b>to'lov chekining rasmini</b> yuboring!", parse_mode="HTML")
+    await message.answer("⚠️ Iltimos, matn yoki boshqa narsa emas, faqat **to'lov chekining rasmini** yuboring!", parse_mode="HTML")
 
 # Admin tugmani bosganda (Tasdiqlash yoki Rad etish)
 @router.callback_query(F.data.startswith(("approve_", "reject_")))
@@ -76,18 +100,19 @@ async def admin_callback(callback: CallbackQuery):
         try:
             await callback.bot.send_message(
                 chat_id=user_id,
-                text="🎉 <b>Tabriklaymiz!</b> To'lovingiz muvaffaqiyatli tasdiqlandi va buyurtmangiz faol holatga o'tdi ✅ Tez orada yetkazib beramiz!",
+                text="🎉 <b>Tabriklaymiz!</b> To'lovingiz tasdiqlandi va buyurtmangiz faol holatga o'tdi ✅ Tez orada yetkazib beramiz!",
                 parse_mode="HTML"
             )
         except Exception as e:
             logging.error(f"Mijozga xabar yuborib bo'lmadi: {e}")
 
+        # Admin panelidagi xabarni o'zgartirish
         await callback.message.edit_caption(
-            caption=callback.message.caption + "\n\n<b>STATUS: ✅ TASDIQLANGAN</b>",
+            caption=callback.message.caption + "\n\n<b>STATUS: ✅ TASDIQLANGAN (FAOL)</b>",
             parse_mode="HTML",
             reply_markup=None
         )
-        await callback.answer("Buyurtma tasdiqlandi!")
+        await callback.answer("Buyurtma muvaffaqiyatli tasdiqlandi!")
 
     elif action == "reject":
         try:
@@ -99,20 +124,21 @@ async def admin_callback(callback: CallbackQuery):
         except Exception as e:
             logging.error(f"Mijozga xabar yuborib bo'lmadi: {e}")
 
+        # Admin panelidagi xabarni o'zgartirish
         await callback.message.edit_caption(
             caption=callback.message.caption + "\n\n<b>STATUS: ❌ RAD ETILGAN</b>",
             parse_mode="HTML",
             reply_markup=None
         )
-        await callback.answer("Buyurtma rad etildi!")
+        await callback.answer("Buyurtma rad etildi.")
 
-# Botni ishga tushirish
+# Botni ishga tushirish funksiyasi
 async def main():
     bot = Bot(token=BOT_TOKEN)
     dp = Dispatcher()
     dp.include_router(router)
     
-    print("🤖 Bot ishga tushdi...")
+    print("🤖 Bot muvaffaqiyatli ishga tushdi...")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
