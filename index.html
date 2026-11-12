@@ -80,7 +80,7 @@
 
     </main>
 
-    <!-- LIGHTBOX (Foniga bosilganda yopiladi) -->
+    <!-- LIGHTBOX -->
     <div id="lightbox" onclick="closeLightbox()" class="fixed inset-0 bg-black/90 z-[60] hidden flex items-center justify-center opacity-0 transition-opacity duration-300 backdrop-blur-md">
         <button onclick="closeLightbox()" class="absolute top-6 right-6 text-gray-400 hover:text-white text-4xl leading-none cursor-pointer">&times;</button>
         <img id="lightbox-img" src="" alt="Zoom" class="max-w-[90vw] max-h-[85vh] object-contain rounded-xl transform scale-95 transition-transform duration-300 shadow-2xl" onclick="event.stopPropagation()">
@@ -113,7 +113,15 @@
         </div>
     </div>
 
-    <!-- CHECKOUT MODAL (Foniga bosilganda yopiladi) -->
+    <!-- QUICK VIEW MODAL -->
+    <div id="quickViewModal" onclick="closeQuickView()" class="fixed inset-0 bg-black/60 z-[65] hidden backdrop-blur-md flex items-center justify-center p-4 opacity-0 transition-opacity duration-300 font-mono-ui">
+        <div onclick="event.stopPropagation()" class="bg-white rounded-[2rem] max-w-lg w-full p-6 md:p-8 shadow-2xl relative transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto custom-scroll">
+            <button onclick="closeQuickView()" class="sticky top-0 float-right z-30 text-gray-400 hover:text-pink-500 text-3xl leading-none bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-full shadow-sm cursor-pointer">&times;</button>
+            <div id="quickViewContent" class="clear-right pt-2"></div>
+        </div>
+    </div>
+
+    <!-- CHECKOUT MODAL -->
     <div id="checkoutModal" onclick="closeCheckout()" class="fixed inset-0 bg-black/50 z-[60] hidden backdrop-blur-sm flex items-center justify-center opacity-0 transition-opacity duration-300 font-mono-ui px-4">
         <div onclick="event.stopPropagation()" class="bg-white p-6 md:p-8 rounded-3xl w-full max-w-md transform scale-95 transition-transform duration-300 shadow-2xl relative">
             <div class="flex justify-between items-center mb-6">
@@ -142,7 +150,7 @@
         </div>
     </div>
 
-    <!-- SEARCH MODAL (Foniga bosilganda yopiladi) -->
+    <!-- SEARCH MODAL -->
     <div id="searchModal" onclick="closeSearch()" class="fixed inset-0 bg-black/60 z-[60] hidden backdrop-blur-md flex flex-col items-center pt-16 md:pt-20 px-4 opacity-0 transition-opacity duration-300 font-mono-ui">
         <div onclick="event.stopPropagation()" class="bg-white p-6 md:p-8 rounded-3xl w-full max-w-2xl transform scale-95 transition-transform duration-300 shadow-2xl relative flex flex-col max-h-[85vh]">
             <button onclick="closeSearch()" class="absolute top-6 right-6 text-gray-400 hover:text-pink-500 text-3xl leading-none z-10 cursor-pointer">&times;</button>
@@ -164,7 +172,7 @@
         </div>
     </div>
 
-    <!-- Profil Modali (Foniga bosilganda yopiladi) -->
+    <!-- Profil Modali -->
     <div id="profileModal" onclick="closeProfile()" class="fixed inset-0 bg-black/50 z-[60] hidden backdrop-blur-sm flex items-center justify-center opacity-0 transition-opacity duration-300 font-mono-ui px-4">
         <div onclick="event.stopPropagation()" class="bg-white p-6 md:p-8 rounded-3xl w-full max-w-md transform scale-95 transition-transform duration-300 shadow-2xl relative">
             <div class="flex justify-between items-center mb-6">
@@ -220,6 +228,7 @@
 
         let currentCategoryIndex = 0; 
         let cart = [];
+        let modalSelectedSize = 'M';
 
         let currentSlide = 0;
         let slideInterval;
@@ -364,7 +373,7 @@
                 const originalIndex = dressesCatalog.findIndex(p => p.id === prod.id); 
                 
                 html += `
-                    <div class="w-full relative bg-white/60 backdrop-blur-xl border-2 border-transparent hover:border-white hover:bg-white/80 hover:shadow-lg hover:-translate-y-1 rounded-3xl p-2 md:p-3 transition-all duration-300 flex flex-col group">
+                    <div onclick="openQuickView(${originalIndex}, event)" class="w-full relative bg-white/60 backdrop-blur-xl border-2 border-transparent hover:border-white hover:bg-white/80 hover:shadow-lg hover:-translate-y-1 rounded-3xl p-2 md:p-3 cursor-pointer transition-all duration-300 flex flex-col group">
 
                         <div class="w-full aspect-[3/4] bg-gray-100 rounded-2xl overflow-hidden relative shadow-inner mb-3">
                             <img src="${prod.image}" alt="${prod.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
@@ -389,7 +398,7 @@
                                 <div class="text-gray-900 font-bold font-mono-ui text-[11px] md:text-sm">
                                     ${prod.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")} <span class="text-[9px] text-gray-500">UZS</span>
                                 </div>
-                                <button onclick="addToCartDirect(${originalIndex}, event)" class="bg-gray-900 text-white p-2 rounded-xl hover:bg-pink-500 transition-colors shadow-sm cursor-pointer" title="Savatga qo'shish">
+                                <button onclick="openQuickView(${originalIndex}, event)" class="bg-gray-900 text-white p-2 rounded-xl hover:bg-pink-500 transition-colors shadow-sm cursor-pointer" title="Savatga qo'shish / Ko'rish">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                                 </button>
                             </div>
@@ -406,13 +415,94 @@
             }
         }
 
-        function addToCartDirect(index, e) {
+        function openQuickView(index, e) {
             e.stopPropagation();
             const prod = dressesCatalog[index];
-            cart.push({ ...prod, selectedSize: 'M' });
+            modalSelectedSize = 'M';
+            
+            const modalContent = document.getElementById('quickViewContent');
+            const priceF = prod.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+            
+            modalContent.innerHTML = `
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="w-full md:w-1/2 aspect-[3/4] rounded-2xl overflow-hidden shadow-inner bg-gray-100 relative">
+                        <img src="${prod.image}" class="w-full h-full object-cover">
+                        <span class="absolute top-3 left-3 bg-gray-900 text-white text-[9px] px-2 py-1 rounded font-bold tracking-widest">ID: ${prod.id}</span>
+                    </div>
+                    <div class="w-full md:w-1/2 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] text-pink-500 font-bold tracking-widest block mb-1">PREMIUM SIFAT</span>
+                            <h3 class="text-xl md:text-2xl font-playfair font-bold text-gray-900 mb-2">${prod.title}</h3>
+                            <div class="text-lg font-bold text-gray-900 mb-4">${priceF} <span class="text-xs text-gray-500">UZS</span></div>
+                            
+                            <div class="space-y-3 text-xs mb-6">
+                                <div class="flex justify-between border-b border-gray-100 pb-2">
+                                    <span class="text-gray-400">Mato:</span>
+                                    <span class="font-bold text-gray-800">${prod.material}</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-6">
+                                <label class="text-[10px] text-gray-400 tracking-widest block mb-2">O'LCHAMNI TANLANG</label>
+                                <div class="flex space-x-3" id="modal-size-container">
+                                    <button onclick="setModalSize('S', this)" class="modal-size-btn w-10 h-10 rounded-xl border border-gray-300 flex items-center justify-center font-bold text-xs hover:border-gray-900 transition-colors cursor-pointer">S</button>
+                                    <button onclick="setModalSize('M', this)" class="modal-size-btn active bg-gray-900 text-white border border-gray-900 w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs transition-colors shadow-md cursor-pointer">M</button>
+                                    <button onclick="setModalSize('L', this)" class="modal-size-btn w-10 h-10 rounded-xl border border-gray-300 flex items-center justify-center font-bold text-xs hover:border-gray-900 transition-colors cursor-pointer">L</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <button onclick="addModalToCart(${index})" class="w-full bg-gray-900 text-white py-3.5 rounded-xl font-bold tracking-widest text-xs hover:bg-pink-500 transition-all shadow-lg shadow-gray-900/20 cursor-pointer">
+                                SAVATGA QO'SHISH
+                            </button>
+                            <button onclick="buyNow(${index})" class="w-full bg-pink-500 text-white py-3.5 rounded-xl font-bold tracking-widest text-xs hover:bg-gray-900 transition-all shadow-lg shadow-pink-500/20 cursor-pointer">
+                                SOTIB OLISH (CHECKOUT)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const modal = document.getElementById('quickViewModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.querySelector('div').classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeQuickView() {
+            const modal = document.getElementById('quickViewModal');
+            modal.classList.add('opacity-0');
+            modal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function setModalSize(size, btn) {
+            modalSelectedSize = size;
+            document.querySelectorAll('.modal-size-btn').forEach(b => {
+                b.className = "modal-size-btn w-10 h-10 rounded-xl border border-gray-300 flex items-center justify-center font-bold text-xs hover:border-gray-900 transition-colors cursor-pointer";
+            });
+            btn.className = "modal-size-btn active bg-gray-900 text-white border border-gray-900 w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs transition-colors shadow-md cursor-pointer";
+        }
+
+        function addModalToCart(index) {
+            const prod = dressesCatalog[index];
+            cart.push({ ...prod, selectedSize: modalSelectedSize });
             updateCartUI();
             updateBadges();
-            showToast(`${prod.title} savatga qo'shildi!`);
+            closeQuickView();
+            showToast(`${prod.title} (${modalSelectedSize}) savatga qo'shildi!`);
+        }
+
+        function buyNow(index) {
+            const prod = dressesCatalog[index];
+            cart.push({ ...prod, selectedSize: modalSelectedSize });
+            updateCartUI();
+            updateBadges();
+            closeQuickView();
+            openCheckout();
         }
 
         function toggleLike(index, e) {
@@ -548,7 +638,7 @@
                 const originalIndex = dressesCatalog.findIndex(x => x.id === p.id);
                 const priceF = p.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
                 resultsBox.innerHTML += `
-                    <div onclick="closeSearch(); addToCartDirect(${originalIndex}, event);" class="flex items-center gap-4 p-2 md:p-3 hover:bg-pink-50/50 rounded-2xl cursor-pointer transition-all duration-300 border border-transparent hover:border-pink-200">
+                    <div onclick="closeSearch(); openQuickView(${originalIndex}, event);" class="flex items-center gap-4 p-2 md:p-3 hover:bg-pink-50/50 rounded-2xl cursor-pointer transition-all duration-300 border border-transparent hover:border-pink-200">
                         <img src="${p.image}" class="w-12 h-16 object-cover rounded-xl shadow-sm">
                         <div class="flex-1">
                             <div class="text-gray-400 text-[8px] md:text-[9px] tracking-widest mb-0.5">ID: ${p.id}</div>
@@ -556,7 +646,7 @@
                             <div class="text-[10px] md:text-xs text-pink-500 font-bold mt-1">${priceF} UZS</div>
                         </div>
                         <div class="w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm text-pink-500 mr-1">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         </div>
                     </div>
                 `;
